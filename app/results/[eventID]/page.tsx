@@ -143,7 +143,7 @@ export default function EventIDPage() {
           <SegmentTable segment={chosenSegment} />
         ) : (
           selectedSegmentName && (
-            <p>No data for segment "{selectedSegmentName}".</p>
+            <p>No data for segment {selectedSegmentName}.</p>
           )
         )}
       </>
