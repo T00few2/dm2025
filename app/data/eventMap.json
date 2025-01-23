@@ -1,0 +1,22 @@
+{
+    "h50": {
+      "enkeltstart": "4770215",
+      "point": "4555500",
+      "linje": "4555500"
+    },
+    "h40": {
+      "enkeltstart": "4555500",
+      "point": "4555500",
+      "linje": "4555500"
+    },
+    "dame": {
+      "enkeltstart": "4555500",
+      "point": "4555500",
+      "linje": "4555500"
+    },
+    "herre": {
+      "enkeltstart": "4555500",
+      "point": "4555500",
+      "linje": "4555500"
+    }
+}
