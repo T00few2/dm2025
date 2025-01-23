@@ -27,6 +27,7 @@ type RacerScore = {
 
 type SegmentScore = {
   name: string;
+  repeat: number;
   fal: { athleteId: number; name: string; points: number }[];
   fts: { athleteId: number; name: string; points: number }[];
 };
@@ -64,6 +65,8 @@ export default function RacePage() {
       return;
     }
     const db = getDb();
+    // Note: If your data is at `race_results/<eventID>/B` or something else,
+    // adjust the path. Right now it's `race_results/<eventID>`.
     const dbRef = ref(db, `race_results/${eventID}`);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
@@ -120,13 +123,25 @@ export default function RacePage() {
   function renderSegmentScores() {
     if (!data?.segmentScores) return <p>No segment scores found.</p>;
 
-    const segmentNames = data.segmentScores.map((s) => s.name);
+    // Build a map of label -> segment object
+    // label is "name [repeat]"
+    const segmentsMap = new Map<string, SegmentScore>();
+    for (const seg of data.segmentScores) {
+      const label = `${seg.name} [${seg.repeat}]`;
+      segmentsMap.set(label, seg);
+    }
 
+    // Sort the labels if desired (optional)
+    const segmentLabels = Array.from(segmentsMap.keys());
+
+    // Determine which segment is chosen
     let chosenSegment: SegmentScore | undefined;
     if (selectedSegmentName === 'latest') {
+      // "latest" -> last segment in the array
       chosenSegment = data.segmentScores[data.segmentScores.length - 1];
     } else {
-      chosenSegment = data.segmentScores.find((seg) => seg.name === selectedSegmentName);
+      // Otherwise, find by the label in segmentsMap
+      chosenSegment = segmentsMap.get(selectedSegmentName);
     }
 
     return (
@@ -139,9 +154,9 @@ export default function RacePage() {
             onChange={(e) => setSelectedSegmentName(e.target.value)}
           >
             <option value="latest">Latest</option>
-            {segmentNames.map((name) => (
-              <option key={name} value={name}>
-                {name}
+            {segmentLabels.map((label) => (
+              <option key={label} value={label}>
+                {label}
               </option>
             ))}
           </select>
@@ -153,8 +168,14 @@ export default function RacePage() {
   }
 
   function SegmentTable({ segment }: { segment: SegmentScore }) {
-    const sortedFal = [...segment.fal].sort((a, b) => b.points - a.points);
-
+    // Default fal or fts to an empty array if they're missing/undefined:
+    const falArray = segment.fal ?? [];
+    const ftsArray = segment.fts ?? [];
+  
+    const sortedFal = [...falArray].sort((a, b) => b.points - a.points);
+    // If you need to sort fts as well:
+    // const sortedFts = [...ftsArray].sort((a, b) => b.points - a.points);
+  
     return (
       <>
         <h2>{segment.name}</h2>
@@ -177,6 +198,7 @@ export default function RacePage() {
       </>
     );
   }
+  
 
   // 1) If eventID not found in JSON -> invalid route
   if (!eventID) {
@@ -184,7 +206,7 @@ export default function RacePage() {
       <main>
         <h1>Invalid Route</h1>
         <p>
-          No eventID found for category {categoryStr} and race {raceStr} in
+          No eventID found for category "{categoryStr}" and race "{raceStr}" in
           eventMap.json.
         </p>
       </main>
