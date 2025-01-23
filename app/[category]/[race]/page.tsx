@@ -64,7 +64,7 @@ export default function RacePage() {
       return;
     }
     const db = getDb();
-    const dbRef = ref(db, `race_results/${eventID}/B`);
+    const dbRef = ref(db, `race_results/${eventID}`);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
       if (snapshot.exists()) {
