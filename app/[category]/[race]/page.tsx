@@ -170,7 +170,7 @@ export default function RacePage() {
   function SegmentTable({ segment }: { segment: SegmentScore }) {
     // Default fal or fts to an empty array if they're missing/undefined:
     const falArray = segment.fal ?? [];
-    const ftsArray = segment.fts ?? [];
+    //const ftsArray = segment.fts ?? [];
   
     const sortedFal = [...falArray].sort((a, b) => b.points - a.points);
     // If you need to sort fts as well:
@@ -206,7 +206,7 @@ export default function RacePage() {
       <main>
         <h1>Invalid Route</h1>
         <p>
-          No eventID found for category "{categoryStr}" and race "{raceStr}" in
+          No eventID found for category {categoryStr} and race {raceStr} in
           eventMap.json.
         </p>
       </main>
