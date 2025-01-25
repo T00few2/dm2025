@@ -1,16 +1,15 @@
+// app/components/races/Enkeltstart.tsx
 'use client';
 
 import React, { memo } from 'react';
 import { RaceData, RacerScore } from '@/app/types';
+
 import {
   Table,
-  TableHead,
-  TableRow,
-  TableHeaderCell,
-  TableBody,
-  TableCell,
   Text,
-} from '@tremor/react';
+  Box,
+  Heading,
+} from '@chakra-ui/react';
 import { parseDurationTime } from '@/app/utils/timeUtils';
 
 type EnkeltstartProps = {
@@ -23,11 +22,11 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   const { racerScores, segmentScores } = data;
 
   if (!racerScores || !Array.isArray(racerScores)) {
-    return <p>No racer scores available for Enkeltstart.</p>;
+    return <Text>No racer scores available for Enkeltstart.</Text>;
   }
 
   if (!segmentScores || !Array.isArray(segmentScores)) {
-    return <p>No segment scores available for Enkeltstart.</p>;
+    return <Text>No segment scores available for Enkeltstart.</Text>;
   }
 
   // Aggregate all split times per racer
@@ -49,48 +48,48 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   });
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">
+    <Box p={4}>
+      <Heading as="h2" size="lg" mb={4}>
         {category} {race}
-      </h2>
-      <Table className="table-auto border-separate border-spacing-4">
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell className="text-left">Navn</TableHeaderCell>
+      </Heading>
+      <Table.Root colorScheme="gray" size="md" minW="full">
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeader textAlign="left">Navn</Table.ColumnHeader>
             {segmentScores.map((segment, index) => (
-              <TableHeaderCell key={index} className="text-center">
+              <Table.ColumnHeader key={index} textAlign="center">
                 {segment.name} [{segment.repeat}]
-              </TableHeaderCell>
+              </Table.ColumnHeader>
             ))}
-            <TableHeaderCell className="text-center">Tid</TableHeaderCell>
-            <TableHeaderCell className="text-center">Point</TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+            <Table.ColumnHeader textAlign="center">Tid</Table.ColumnHeader>
+            <Table.ColumnHeader textAlign="center">Point</Table.ColumnHeader>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
           {sortedRacers.map((racer: RacerScore) => {
             const racerSplits = splits[racer.athleteId]?.splits || [];
             return (
-              <TableRow key={racer.athleteId}>
-                <TableCell className="text-left">
+              <Table.Row key={racer.athleteId}>
+                <Table.Cell textAlign="left">
                   <Text>{racer.name}</Text>
-                </TableCell>
+                </Table.Cell>
                 {segmentScores.map((_, index) => (
-                  <TableCell key={index} className="text-center">
+                  <Table.Cell key={index} textAlign="center">
                     <Text>{racerSplits[index] || '-'}</Text>
-                  </TableCell>
+                  </Table.Cell>
                 ))}
-                <TableCell className="text-center">
+                <Table.Cell textAlign="center">
                   <Text>{racer.durationTime}</Text>
-                </TableCell>
-                <TableCell className="text-center">
+                </Table.Cell>
+                <Table.Cell textAlign="center">
                   <Text>{racer.leaguePoints}</Text>
-                </TableCell>
-              </TableRow>
+                </Table.Cell>
+              </Table.Row>
             );
           })}
-        </TableBody>
-      </Table>
-    </div>
+        </Table.Body>
+      </Table.Root>
+    </Box>
   );
 };
 
