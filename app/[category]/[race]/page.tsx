@@ -76,7 +76,7 @@ const RacePage: React.FC = () => {
         return (
           <div>
             <h1>Unknown Race Type</h1>
-            <p>The race type "{raceStr}" is not recognized.</p>
+            <p>The race type {raceStr} is not recognized.</p>
           </div>
         );
     }
@@ -88,7 +88,7 @@ const RacePage: React.FC = () => {
       <main>
         <h1>Invalid Route</h1>
         <p>
-          No eventID found for category "{categoryStr}" and race "{raceStr}" in
+          No eventID found for category {categoryStr} and race {raceStr} in
           eventMap.json.
         </p>
       </main>

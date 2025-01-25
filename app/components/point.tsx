@@ -2,7 +2,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { RaceData, SegmentScore } from '@/app/types';
+import { RaceData } from '@/app/types';
 
 import {
   Table,

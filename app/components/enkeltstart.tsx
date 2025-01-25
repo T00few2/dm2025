@@ -1,8 +1,8 @@
 // app/components/Enkeltstart.tsx
 'use client';
 
-import React, { memo, useState } from 'react';
-import { RaceData, RacerScore, SegmentScore } from '@/app/types';
+import React, { memo } from 'react';
+import { RaceData, RacerScore } from '@/app/types';
 import {
   Table,
   TableHead,
@@ -13,7 +13,7 @@ import {
   Text,
   
 } from '@tremor/react';
-import { parseDurationTime, millisecondsToDurationTime } from '@/app/utils/timeUtils';
+import { parseDurationTime } from '@/app/utils/timeUtils';
 
 type EnkeltstartProps = {
   data: RaceData;
