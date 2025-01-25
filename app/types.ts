@@ -8,6 +8,7 @@ export type RacerScore = {
     ftsPointTotal: number;
     finPoints: number;
     pointTotal: number;
+    leaguePoints: number;
 };
   
 export type SegmentScore = {
