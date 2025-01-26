@@ -2,11 +2,24 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  createListCollection,
+} from '@chakra-ui/react';
+import {
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+} from '@/components/ui/select';
 import eventMap from '@/app/data/eventMap.json'; // Adjust import if needed
-import styles from './page.module.css';
 
-// Because you used an index signature in your other code, let's keep it here too.
-// If each category can have arbitrary race keys, we'll do something like:
 type RaceEvents = {
   [raceKey: string]: string;
 };
@@ -15,33 +28,38 @@ type EventMap = {
   [categoryKey: string]: RaceEvents;
 };
 
-// We'll tell TypeScript to treat the JSON as that type:
 const typedEventMap = eventMap as EventMap;
 
 export default function Home() {
   const router = useRouter();
 
-  // We'll store the currently selected category, race, etc.
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedRace, setSelectedRace] = useState<string>('');
 
-  // The categories are just the top-level keys
   const categories = Object.keys(typedEventMap);
 
-  // If a category is chosen, get the list of races from that category
   let races: string[] = [];
   if (selectedCategory) {
-    // Convert to lowercase if needed
     const catKey = selectedCategory.toLowerCase();
     if (typedEventMap[catKey]) {
-      // The keys in that object are the race names (like "itt", "sprint", etc.)
       races = Object.keys(typedEventMap[catKey]);
     }
   }
 
-  // Handler for the "Go" button to navigate to /[category]/[race]
-  // In your other code, you also lowercased in the dynamic page. 
-  // So let's also do that here for consistency:
+  const categoryCollection = createListCollection({
+    items: categories.map((cat) => ({
+      label: cat,
+      value: cat,
+    })),
+  });
+
+  const raceCollection = createListCollection({
+    items: races.map((race) => ({
+      label: race,
+      value: race,
+    })),
+  });
+
   function handleGo() {
     if (!selectedCategory || !selectedRace) return;
     const catKey = selectedCategory.toLowerCase();
@@ -50,63 +68,80 @@ export default function Home() {
   }
 
   return (
-    <div className={styles.page}>
-      <h1>Løbsresultater DM2025</h1>
-      <p>Resultater findes på <code>/[kategori]/[løb]</code></p>
-      <p>
-        For eksempel <code>/h50/enkeltstart</code> (or any of your actual keys).
-      </p>
+    <Flex 
+      minH="100vh" 
+      align="center" 
+      justify="center" 
+      p={4} 
+       // Optional background color
+    >
+      <Box maxW="600px" p={6} bg="red" shadow="md" borderRadius="md">
+        <Heading fontWeight={'bolder'} as="h1" size="2xl" mb={6} textAlign="center">
+          DM e-cykling 2025 - Løbsresultater
+        </Heading>
+        <Heading as="h2" size="xl" mb={4} textAlign="center">
+          Vælg kategori og løb
+        </Heading>
 
-      <hr />
-
-      <h2>Vælg kategori og løb</h2>
-      <div>
-        {/* Category dropdown */}
-        <label>
-          Kategori:{' '}
-          <select
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              // Reset the race if category changed
-              setSelectedRace('');
+        <Stack gap={5} width="320px" mx="auto" mb={4}>
+          {/* Category Select */}
+          <SelectRoot
+            size="md"
+            collection={categoryCollection}
+            onValueChange={(details) => {
+              const value = Array.isArray(details.value) ? details.value[0] : details.value;
+              setSelectedCategory(value);
+              setSelectedRace(''); // Reset race when category changes
             }}
           >
-            <option value="">-- Vælg kategori --</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+            
+            <SelectLabel fontWeight={'bold'}>Kategori</SelectLabel>
+            <SelectTrigger>
+              <SelectValueText fontWeight={'bold'} color={'white'} placeholder="-- Vælg kategori --" />
+            </SelectTrigger>
+            <SelectContent>
+              {categoryCollection.items.map((category) => (
+                <SelectItem item={category} key={category.value}>
+                  {category.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectRoot>
 
-      <div style={{ marginTop: '1rem' }}>
-        {/* Race dropdown, depends on category */}
-        <label>
-          Løb:{' '}
-          <select
-            value={selectedRace}
-            onChange={(e) => setSelectedRace(e.target.value)}
+          {/* Race Select */}
+          <SelectRoot
+            size="md"
+            collection={raceCollection}
+            onValueChange={(details) => {
+              const value = Array.isArray(details.value) ? details.value[0] : details.value;
+              setSelectedRace(value);
+            }}
             disabled={!selectedCategory}
           >
-            <option value="">-- Vælg løb --</option>
-            {races.map((race) => (
-              <option key={race} value={race}>
-                {race}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+            <SelectLabel fontWeight={'bold'}>Løb</SelectLabel>
+            <SelectTrigger>
+              <SelectValueText fontWeight={'bold'} color={'white'} placeholder="-- Vælg løb --" />
+            </SelectTrigger>
+            <SelectContent>
+              {raceCollection.items.map((race) => (
+                <SelectItem item={race} key={race.value}>
+                  {race.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectRoot>
+        </Stack>
 
-      <div style={{ marginTop: '1rem' }}>
-        {/* Button to navigate */}
-        <button onClick={handleGo} disabled={!selectedCategory || !selectedRace}>
+        <Button
+          colorScheme="red"
+          onClick={handleGo}
+          disabled={!selectedCategory || !selectedRace}
+          w="full"
+          fontWeight={'bold'}
+        >
           Gå til resultater
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Flex>
   );
 }
