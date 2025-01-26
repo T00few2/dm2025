@@ -7,7 +7,7 @@ import {
   Text, 
   Box, 
   Heading, 
-  createListCollection ,
+  createListCollection,
   Flex,
 } from '@chakra-ui/react';
 import {
@@ -34,7 +34,6 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   if (!racerScores || !Array.isArray(racerScores)) {
     return <Text>Ingen resultater for enkeltstarten.</Text>;
   }
-  console.log(racerScores)
 
   if (!segmentScores || !Array.isArray(segmentScores)) {
     return <Text>Ingen resultater for enkeltstarten.</Text>;
@@ -80,9 +79,9 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
 
   return (
     <Box p={4}>
-      <Heading as="h2" size="lg" mb={4}>
-        {category} {race}
-      </Heading>
+        <Heading as="h2" size="lg" mb={4}>
+          DM e-cykling 2025 : {category.charAt(0).toUpperCase() + category.slice(1)} {race}
+        </Heading>
       <SelectRoot
         collection={segmentOptions}
         size="sm"

@@ -1,96 +1,188 @@
-// app/components/races/Point.tsx
 'use client';
 
-import React, { memo } from 'react';
-import { RaceData } from '@/app/types';
-import {
-  Table,
-  Box,
-  Heading,
-  Text,
+import React, { memo, useState } from 'react';
+import { RaceData, RacerScore } from '@/app/types';
+import { 
+  Table, 
+  Text, 
+  Box, 
+  Heading, 
+  createListCollection,
+  Flex,
 } from '@chakra-ui/react';
+import {
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from '@/components/ui/select';
 
-type PointProps = {
+type EnkeltstartProps = {
   data: RaceData;
   category: string;
   race: string;
 };
 
-const Point: React.FC<PointProps> = ({ data, category, race }) => {
-  if (!data.segmentScores) {
-    return <Text>No segment scores available for Point race.</Text>;
+const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
+  const { racerScores, segmentScores } = data;
+
+  const [selectedSegment, setSelectedSegment] = useState<string>('All'); // State is a single string
+
+  if (!racerScores || !Array.isArray(racerScores)) {
+    return <Text>Ingen resultater for pointløbet.</Text>;
   }
 
-  // Step 1: Create a map for leaguePoints from racerScores
-  const leaguePointsMap = data.racerScores?.reduce((acc, racer) => {
-    acc[racer.athleteId] = racer.leaguePoints;
-    return acc;
-  }, {} as Record<string, number>) || {};
+  if (!segmentScores || !Array.isArray(segmentScores)) {
+    return <Text>Ingen resultater for pointløbet.</Text>;
+  }
 
-  // Step 2: Aggregate FAL points by rider across all segments and calculate totals
-  const aggregatedPoints = data.segmentScores.reduce((acc, segment) => {
-    segment.fal.forEach((fal) => {
-      if (!acc[fal.athleteId]) {
-        acc[fal.athleteId] = { name: fal.name, points: {}, total: 0, leaguePoints: 0 };
-      }
-      acc[fal.athleteId].points[segment.name] = fal.points;
-      acc[fal.athleteId].total += fal.points;
-      // Assign leaguePoints from the map
-      acc[fal.athleteId].leaguePoints = leaguePointsMap[fal.athleteId] || 0;
-    });
+  // Create a collection for segment selection
+  const segmentOptions = createListCollection({
+    items: [
+      { label: 'All', value: 'All' },
+      ...segmentScores.map((segment, index) => ({
+        label: `${segment.name} [${segment.repeat}]`,
+        value: index.toString(),
+      })),
+    ],
+  });
+
+  // Aggregate all split points per racer
+  const splits = segmentScores.reduce((acc, segment, segmentIndex) => {
+    if (Array.isArray(segment.fal)) { // Ensure `segment.fal` is an array
+      segment.fal.forEach((fal) => {
+        if (!acc[fal.athleteId]) {
+          acc[fal.athleteId] = { name: fal.name, splits: [] };
+        }
+        acc[fal.athleteId].splits[segmentIndex] = fal.points; // Assign fal.points
+      });
+    }
     return acc;
-  }, {} as Record<string, { name: string; points: Record<string, number>; total: number; leaguePoints: number }>);
-  
-  // Step 3: Extract all segment names for table columns
-  const segmentHeaders = data.segmentScores.map(
-    (segment) => `${segment.name}-${segment.repeat}`
-  );
+  }, {} as Record<string, { name: string; splits: number[] }>);
+
+  // Sort racers based on the selected segment
+  const sortedRacers = [...racerScores].sort((a, b) => {
+    if (selectedSegment === 'All') {
+      const pointsA = a.pointTotal ?? 0;
+      const pointsB = b.pointTotal ?? 0;
+      return pointsB - pointsA; // Sort by total points (descending)
+    } else {
+      const segmentIndex = parseInt(selectedSegment, 10);
+      const pointsA = splits[a.athleteId]?.splits[segmentIndex] ?? 0;
+      const pointsB = splits[b.athleteId]?.splits[segmentIndex] ?? 0;
+      return pointsB - pointsA; // Sort by segment points (descending)
+    }
+  });
 
   return (
     <Box p={4}>
       <Heading as="h2" size="lg" mb={4}>
-        {category} {race}
+        DM e-cykling 2025 : {category.charAt(0).toUpperCase() + category.slice(1)} {race}
       </Heading>
-      <Table.Root size="md">
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeader>Navn</Table.ColumnHeader>
-            {segmentHeaders.map((header) => (
-              <Table.ColumnHeader key={header}>
-                {header.split('-')[0]} [{header.split('-')[1]}]
-              </Table.ColumnHeader>
+      <SelectRoot
+        collection={segmentOptions}
+        size="sm"
+        width="320px"
+        onValueChange={(details) => {
+          const value = Array.isArray(details.value) ? details.value[0] : details.value;
+          setSelectedSegment(value);
+        }}
+      >
+        <Flex align="center" mb={4}>
+          <SelectLabel mr={4}>Segment</SelectLabel>
+          <SelectTrigger width={'300px'}>
+            <SelectValueText placeholder="Select segment" />
+          </SelectTrigger>
+          <SelectContent>
+            {segmentOptions.items.map((option) => (
+              <SelectItem item={option} key={option.value}>
+                {option.label}
+              </SelectItem>
             ))}
-            {/* Total Column */}
-            <Table.ColumnHeader textAlign="right">Total</Table.ColumnHeader>
-            {/* League Points Column */}
-            <Table.ColumnHeader textAlign="center">League Points</Table.ColumnHeader>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(aggregatedPoints).map(({ name, points, leaguePoints, total }) => (
-            <Table.Row key={name}>
-              <Table.Cell>
-                <Text>{name}</Text>
-              </Table.Cell>
-              {segmentHeaders.map((header) => (
-                <Table.Cell key={header} textAlign="center">
-                  <Text>{points[header.split('-')[0]] || 0}</Text>
-                </Table.Cell>
-              ))}
-              {/* Total Cell */}
-              <Table.Cell textAlign="right">
-                <Text>{total}</Text>
-              </Table.Cell>
-              {/* League Points Cell */}
-              <Table.Cell textAlign="center">
-                <Text>{leaguePoints}</Text>
-              </Table.Cell>
+          </SelectContent>
+        </Flex>
+      </SelectRoot>
+      <Table.ScrollArea borderWidth="1px" rounded="md" maxH={'80vh'}>
+        <Table.Root stickyHeader size="sm" minW="full" interactive showColumnBorder>
+          <Table.Header>
+            <Table.Row bg="bg.subtle">
+              <Table.ColumnHeader 
+                textAlign="left" 
+                position="sticky" 
+                left="0" 
+                bg="bg.subtle"
+              >
+                Navn
+              </Table.ColumnHeader>
+              {selectedSegment === 'All'
+                ? segmentScores.map((segment, index) => (
+                    <Table.ColumnHeader key={index} textAlign="center">
+                      {segment.name} [{segment.repeat}]
+                    </Table.ColumnHeader>
+                  ))
+                : (
+                    <Table.ColumnHeader textAlign="center">
+                      {segmentScores[parseInt(selectedSegment, 10)]?.name} [
+                      {segmentScores[parseInt(selectedSegment, 10)]?.repeat}]
+                    </Table.ColumnHeader>
+                  )}
+              {selectedSegment === 'All' && (
+                <>
+                  <Table.ColumnHeader textAlign="center">Point (Total)</Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="center">Point</Table.ColumnHeader>
+                </>
+              )}
             </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
+          </Table.Header>
+          <Table.Body>
+            {sortedRacers.map((racer: RacerScore) => {
+              const racerSplits = splits[racer.athleteId]?.splits || [];
+              return (
+                <Table.Row key={racer.athleteId}>
+                  <Table.Cell 
+                    textAlign="left" 
+                    position="sticky" 
+                    left="0" 
+                    zIndex="1" 
+                    bg="bg.subtle"
+                  >
+                    <Text>{racer.name}</Text>
+                  </Table.Cell>
+                  {selectedSegment === 'All'
+                    ? segmentScores.map((_, index) => (
+                        <Table.Cell key={index} textAlign="center">
+                          <Text>
+                            {racerSplits[index] !== undefined ? racerSplits[index] : '-'}
+                          </Text>
+                        </Table.Cell>
+                      ))
+                    : (
+                        <Table.Cell textAlign="center">
+                          <Text>
+                            {racerSplits[parseInt(selectedSegment, 10)] ?? '-'}
+                          </Text>
+                        </Table.Cell>
+                      )}
+                  {selectedSegment === 'All' && (
+                    <>
+                      <Table.Cell textAlign="center">
+                        <Text>{racer.pointTotal ?? '-'}</Text>
+                      </Table.Cell>
+                          <Table.Cell textAlign="center">
+                            <Text>{racer.durationTime === 'N/A' ? '-' : racer.leaguePoints}</Text>
+                          </Table.Cell>
+                    </>
+                  )}
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table.Root>
+      </Table.ScrollArea>
     </Box>
   );
 };
 
-export default memo(Point);
+export default memo(Enkeltstart);
