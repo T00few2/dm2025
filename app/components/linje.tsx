@@ -94,9 +94,9 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
         }}
       >
         <Flex align="center" mb={4}>
-        <SelectLabel mr={4}>Segment</SelectLabel>
+        <SelectLabel mr={4}>Mellemtider</SelectLabel>
         <SelectTrigger width={'300px'}>
-        <SelectValueText placeholder="Select segment" />
+        <SelectValueText placeholder="Vælg mellemtid" />
         </SelectTrigger>
         <SelectContent>
           {segmentOptions.items.map((option) => (
