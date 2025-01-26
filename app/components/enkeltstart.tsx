@@ -108,7 +108,12 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
         <Table.Root stickyHeader size="sm" minW="full" interactive showColumnBorder>
           <Table.Header>
             <Table.Row bg="bg.subtle">
-              <Table.ColumnHeader textAlign="left">Navn</Table.ColumnHeader>
+            <Table.ColumnHeader 
+          textAlign="left" 
+          position="sticky" 
+          left="0" 
+          bg="bg.subtle"
+        >Navn</Table.ColumnHeader>
               {selectedSegment === 'All'
                 ? segmentScores.map((segment, index) => (
                     <Table.ColumnHeader key={index} textAlign="center">
@@ -134,7 +139,13 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
               const racerSplits = splits[racer.athleteId]?.splits || [];
               return (
                 <Table.Row key={racer.athleteId}>
-                  <Table.Cell textAlign="left">
+                     <Table.Cell 
+              textAlign="left" 
+              position="sticky" 
+              left="0" 
+              zIndex="1" 
+              bg="bg.subtle"
+            >
                     <Text>{racer.name}</Text>
                   </Table.Cell>
                   {selectedSegment === 'All'
