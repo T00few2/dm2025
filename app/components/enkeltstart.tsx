@@ -32,12 +32,12 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   const [selectedSegment, setSelectedSegment] = useState<string>('All'); // State is a single string
 
   if (!racerScores || !Array.isArray(racerScores)) {
-    return <Text>No racer scores available for Enkeltstart.</Text>;
+    return <Text>Ingen resultater for enkeltstarten.</Text>;
   }
   console.log(racerScores)
 
   if (!segmentScores || !Array.isArray(segmentScores)) {
-    return <Text>No segment scores available for Enkeltstart.</Text>;
+    return <Text>Ingen resultater for enkeltstarten.</Text>;
   }
 
   // Create a collection for segment selection
