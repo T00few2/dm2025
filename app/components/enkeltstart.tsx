@@ -34,6 +34,7 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   if (!racerScores || !Array.isArray(racerScores)) {
     return <Text>No racer scores available for Enkeltstart.</Text>;
   }
+  console.log(racerScores)
 
   if (!segmentScores || !Array.isArray(segmentScores)) {
     return <Text>No segment scores available for Enkeltstart.</Text>;
@@ -52,12 +53,14 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
 
   // Aggregate all split times per racer
   const splits = segmentScores.reduce((acc, segment, segmentIndex) => {
-    segment.fal.forEach((fal) => {
-      if (!acc[fal.athleteId]) {
-        acc[fal.athleteId] = { name: fal.name, splits: [] };
-      }
-      acc[fal.athleteId].splits[segmentIndex] = fal.eventTimeDisplay;
-    });
+    if (Array.isArray(segment.fal)) { // Ensure `segment.fal` is an array
+      segment.fal.forEach((fal) => {
+        if (!acc[fal.athleteId]) {
+          acc[fal.athleteId] = { name: fal.name, splits: [] };
+        }
+        acc[fal.athleteId].splits[segmentIndex] = fal.eventTimeDisplay;
+      });
+    }
     return acc;
   }, {} as Record<string, { name: string; splits: string[] }>);
 
@@ -174,22 +177,23 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
                         </Table.Cell>
                       )}
                   {selectedSegment === 'All' && (
-                    <>
-                      <Table.Cell textAlign="center">
-                        <Text>
-                          {racer.durationTime.split('.')[0]}
-                          {racer.durationTime.includes('.') && (
-                            <Text as="span" fontSize="xs" ml={1}>
-                              .{racer.durationTime.split('.')[1]}
-                            </Text>
-                          )}
-                        </Text>
-                      </Table.Cell>
-                      <Table.Cell textAlign="center">
-                        <Text>{racer.leaguePoints}</Text>
-                      </Table.Cell>
-                    </>
-                  )}
+  <>
+    <Table.Cell textAlign="center">
+      <Text>
+        {racer.durationTime === 'N/A' ? '-' : racer.durationTime.split('.')[0]}
+        {racer.durationTime !== 'N/A' && racer.durationTime.includes('.') && (
+          <Text as="span" fontSize="xs" ml={1}>
+            .{racer.durationTime.split('.')[1]}
+          </Text>
+        )}
+      </Text>
+    </Table.Cell>
+    <Table.Cell textAlign="center">
+      <Text>{racer.durationTime === 'N/A' ? '-' : racer.leaguePoints}</Text>
+    </Table.Cell>
+  </>
+)}
+
                 </Table.Row>
               );
             })}
