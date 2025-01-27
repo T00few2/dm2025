@@ -42,6 +42,7 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   const segmentOptions = createListCollection({
     items: [
       { label: 'All', value: 'All' },
+      { label: 'Point (Total)', value: 'Total' },
       ...segmentScores.map((segment, index) => ({
         label: `${segment.name} [${segment.repeat}]`,
         value: index.toString(),
@@ -64,7 +65,7 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
 
   // Sort racers based on the selected segment
   const sortedRacers = [...racerScores].sort((a, b) => {
-    if (selectedSegment === 'All') {
+    if (selectedSegment === 'All' || selectedSegment === 'Total') {
       const pointsA = a.pointTotal ?? 0;
       const pointsB = b.pointTotal ?? 0;
       return pointsB - pointsA; // Sort by total points (descending)
@@ -116,23 +117,20 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
               >
                 Navn
               </Table.ColumnHeader>
-              {selectedSegment === 'All'
-                ? segmentScores.map((segment, index) => (
-                    <Table.ColumnHeader key={index} textAlign="center">
-                      {segment.name} [{segment.repeat}]
-                    </Table.ColumnHeader>
-                  ))
-                : (
-                    <Table.ColumnHeader textAlign="center">
-                      {segmentScores[parseInt(selectedSegment, 10)]?.name} [
-                      {segmentScores[parseInt(selectedSegment, 10)]?.repeat}]
-                    </Table.ColumnHeader>
-                  )}
-              {selectedSegment === 'All' && (
-                <>
-                  <Table.ColumnHeader textAlign="center">Point (Total)</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center">Point</Table.ColumnHeader>
-                </>
+              {selectedSegment === 'All' &&
+                segmentScores.map((segment, index) => (
+                  <Table.ColumnHeader key={index} textAlign="center">
+                    {segment.name} [{segment.repeat}]
+                  </Table.ColumnHeader>
+                ))}
+              {(selectedSegment === 'All' || selectedSegment === 'Total') && (
+                <Table.ColumnHeader textAlign="center">Point (Total)</Table.ColumnHeader>
+              )}
+              {selectedSegment !== 'All' && selectedSegment !== 'Total' && (
+                <Table.ColumnHeader textAlign="center">
+                  {segmentScores[parseInt(selectedSegment, 10)]?.name} [
+                  {segmentScores[parseInt(selectedSegment, 10)]?.repeat}]
+                </Table.ColumnHeader>
               )}
             </Table.Row>
           </Table.Header>
@@ -150,30 +148,25 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
                   >
                     <Text>{racer.name}</Text>
                   </Table.Cell>
-                  {selectedSegment === 'All'
-                    ? segmentScores.map((_, index) => (
-                        <Table.Cell key={index} textAlign="center">
-                          <Text>
-                            {racerSplits[index] !== undefined ? racerSplits[index] : '-'}
-                          </Text>
-                        </Table.Cell>
-                      ))
-                    : (
-                        <Table.Cell textAlign="center">
-                          <Text>
-                            {racerSplits[parseInt(selectedSegment, 10)] ?? '-'}
-                          </Text>
-                        </Table.Cell>
-                      )}
-                  {selectedSegment === 'All' && (
-                    <>
-                      <Table.Cell textAlign="center">
-                        <Text>{racer.pointTotal ?? '-'}</Text>
+                  {selectedSegment === 'All' &&
+                    segmentScores.map((_, index) => (
+                      <Table.Cell key={index} textAlign="center">
+                        <Text>
+                          {racerSplits[index] !== undefined ? racerSplits[index] : '-'}
+                        </Text>
                       </Table.Cell>
-                          <Table.Cell textAlign="center">
-                            <Text>{racer.durationTime === 'N/A' ? '-' : racer.leaguePoints}</Text>
-                          </Table.Cell>
-                    </>
+                    ))}
+                  {(selectedSegment === 'All' || selectedSegment === 'Total') && (
+                    <Table.Cell textAlign="center">
+                      <Text>{racer.pointTotal ?? '-'}</Text>
+                    </Table.Cell>
+                  )}
+                  {selectedSegment !== 'All' && selectedSegment !== 'Total' && (
+                    <Table.Cell textAlign="center">
+                      <Text>
+                        {racerSplits[parseInt(selectedSegment, 10)] ?? '-'}
+                      </Text>
+                    </Table.Cell>
                   )}
                 </Table.Row>
               );
