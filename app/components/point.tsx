@@ -28,13 +28,14 @@ type EnkeltstartProps = {
 const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   const { racerScores = [], segmentScores = [] } = data;
 
-  const [selectedSegment, setSelectedSegment] = useState<string>('All'); // State is a single string
+  // Default value as an array of strings
+  const [selectedSegment, setSelectedSegment] = useState<string[]>(['Total']);
 
   // Create a collection for segment selection
   const segmentOptions = createListCollection({
     items: [
       { label: 'All', value: 'All' },
-      { label: 'Point (Total)', value: 'Total' },
+      { label: 'Total', value: 'Total' },
       ...segmentScores.map((segment, index) => ({
         label: `${segment.name} [${segment.repeat}]`,
         value: index.toString(),
@@ -57,12 +58,13 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
 
   // Sort racers based on the selected segment
   const sortedRacers = [...racerScores].sort((a, b) => {
-    if (selectedSegment === 'All' || selectedSegment === 'Total') {
+    const selectedValue = selectedSegment[0]; // Get the first selected value
+    if (selectedValue === 'All' || selectedValue === 'Total') {
       const pointsA = a.pointTotal ?? 0;
       const pointsB = b.pointTotal ?? 0;
       return pointsB - pointsA; // Sort by total points (descending)
     } else {
-      const segmentIndex = parseInt(selectedSegment, 10);
+      const segmentIndex = parseInt(selectedValue, 10);
       const pointsA = splits[a.athleteId]?.splits[segmentIndex] ?? 0;
       const pointsB = splits[b.athleteId]?.splits[segmentIndex] ?? 0;
       return pointsB - pointsA; // Sort by segment points (descending)
@@ -78,8 +80,9 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
         collection={segmentOptions}
         size="sm"
         width="320px"
+        value={selectedSegment} // Use array of strings
         onValueChange={(details) => {
-          const value = Array.isArray(details.value) ? details.value[0] : details.value;
+          const value = Array.isArray(details.value) ? details.value : [details.value];
           setSelectedSegment(value);
         }}
       >
@@ -109,19 +112,19 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
               >
                 Navn
               </Table.ColumnHeader>
-              {selectedSegment === 'All' &&
+              {selectedSegment[0] === 'All' &&
                 segmentScores.map((segment, index) => (
                   <Table.ColumnHeader key={index} textAlign="center">
                     {segment.name} [{segment.repeat}]
                   </Table.ColumnHeader>
                 ))}
-              {(selectedSegment === 'All' || selectedSegment === 'Total') && (
-                <Table.ColumnHeader textAlign="center">Point (Total)</Table.ColumnHeader>
+              {(selectedSegment[0] === 'All' || selectedSegment[0] === 'Total') && (
+                <Table.ColumnHeader textAlign="center">Total</Table.ColumnHeader>
               )}
-              {selectedSegment !== 'All' && selectedSegment !== 'Total' && (
+              {selectedSegment[0] !== 'All' && selectedSegment[0] !== 'Total' && (
                 <Table.ColumnHeader textAlign="center">
-                  {segmentScores[parseInt(selectedSegment, 10)]?.name} [
-                  {segmentScores[parseInt(selectedSegment, 10)]?.repeat}]
+                  {segmentScores[parseInt(selectedSegment[0], 10)]?.name} [
+                  {segmentScores[parseInt(selectedSegment[0], 10)]?.repeat}]
                 </Table.ColumnHeader>
               )}
             </Table.Row>
@@ -141,7 +144,7 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
                     >
                       <Text>{racer.name}</Text>
                     </Table.Cell>
-                    {selectedSegment === 'All' &&
+                    {selectedSegment[0] === 'All' &&
                       segmentScores.map((_, index) => (
                         <Table.Cell key={index} textAlign="center">
                           <Text>
@@ -149,15 +152,15 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
                           </Text>
                         </Table.Cell>
                       ))}
-                    {(selectedSegment === 'All' || selectedSegment === 'Total') && (
+                    {(selectedSegment[0] === 'All' || selectedSegment[0] === 'Total') && (
                       <Table.Cell textAlign="center">
                         <Text>{racer.pointTotal ?? '-'}</Text>
                       </Table.Cell>
                     )}
-                    {selectedSegment !== 'All' && selectedSegment !== 'Total' && (
+                    {selectedSegment[0] !== 'All' && selectedSegment[0] !== 'Total' && (
                       <Table.Cell textAlign="center">
                         <Text>
-                          {racerSplits[parseInt(selectedSegment, 10)] ?? '-'}
+                          {racerSplits[parseInt(selectedSegment[0], 10)] ?? '-'}
                         </Text>
                       </Table.Cell>
                     )}
