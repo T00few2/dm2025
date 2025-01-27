@@ -168,13 +168,39 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
                 );
               })
             ) : (
-              <Table.Row>
-                <Table.Cell textAlign="center" colSpan={segmentScores.length + 2}>
-                  <Text>Ingen resultater endnu.</Text>
-                </Table.Cell>
-              </Table.Row>
+              // Render 16 rows with "-" when there are no results
+              Array.from({ length: 16 }).map((_, rowIndex) => (
+                <Table.Row key={`placeholder-${rowIndex}`}>
+                  <Table.Cell
+                    textAlign="left"
+                    position="sticky"
+                    left="0"
+                    zIndex="1"
+                    bg="bg.subtle"
+                  >
+                    <Text>-</Text>
+                  </Table.Cell>
+                  {selectedSegment[0] === 'All' &&
+                    segmentScores.map((_, index) => (
+                      <Table.Cell key={`placeholder-segment-${rowIndex}-${index}`} textAlign="center">
+                        <Text>-</Text>
+                      </Table.Cell>
+                    ))}
+                  {(selectedSegment[0] === 'All' || selectedSegment[0] === 'Total') && (
+                    <Table.Cell textAlign="center">
+                      <Text>-</Text>
+                    </Table.Cell>
+                  )}
+                  {selectedSegment[0] !== 'All' && selectedSegment[0] !== 'Total' && (
+                    <Table.Cell textAlign="center">
+                      <Text>-</Text>
+                    </Table.Cell>
+                  )}
+                </Table.Row>
+              ))
             )}
           </Table.Body>
+
         </Table.Root>
       </Table.ScrollArea>
     </Box>
