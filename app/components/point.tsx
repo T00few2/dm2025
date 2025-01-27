@@ -26,17 +26,9 @@ type EnkeltstartProps = {
 };
 
 const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
-  const { racerScores, segmentScores } = data;
+  const { racerScores = [], segmentScores = [] } = data;
 
   const [selectedSegment, setSelectedSegment] = useState<string>('All'); // State is a single string
-
-  if (!racerScores || !Array.isArray(racerScores)) {
-    return <Text>Ingen resultater for pointløbet.</Text>;
-  }
-
-  if (!segmentScores || !Array.isArray(segmentScores)) {
-    return <Text>Ingen resultater for pointløbet.</Text>;
-  }
 
   // Create a collection for segment selection
   const segmentOptions = createListCollection({
@@ -135,42 +127,50 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {sortedRacers.map((racer: RacerScore) => {
-              const racerSplits = splits[racer.athleteId]?.splits || [];
-              return (
-                <Table.Row key={racer.athleteId}>
-                  <Table.Cell 
-                    textAlign="left" 
-                    position="sticky" 
-                    left="0" 
-                    zIndex="1" 
-                    bg="bg.subtle"
-                  >
-                    <Text>{racer.name}</Text>
-                  </Table.Cell>
-                  {selectedSegment === 'All' &&
-                    segmentScores.map((_, index) => (
-                      <Table.Cell key={index} textAlign="center">
+            {sortedRacers.length > 0 ? (
+              sortedRacers.map((racer: RacerScore) => {
+                const racerSplits = splits[racer.athleteId]?.splits || [];
+                return (
+                  <Table.Row key={racer.athleteId}>
+                    <Table.Cell 
+                      textAlign="left" 
+                      position="sticky" 
+                      left="0" 
+                      zIndex="1" 
+                      bg="bg.subtle"
+                    >
+                      <Text>{racer.name}</Text>
+                    </Table.Cell>
+                    {selectedSegment === 'All' &&
+                      segmentScores.map((_, index) => (
+                        <Table.Cell key={index} textAlign="center">
+                          <Text>
+                            {racerSplits[index] !== undefined ? racerSplits[index] : '-'}
+                          </Text>
+                        </Table.Cell>
+                      ))}
+                    {(selectedSegment === 'All' || selectedSegment === 'Total') && (
+                      <Table.Cell textAlign="center">
+                        <Text>{racer.pointTotal ?? '-'}</Text>
+                      </Table.Cell>
+                    )}
+                    {selectedSegment !== 'All' && selectedSegment !== 'Total' && (
+                      <Table.Cell textAlign="center">
                         <Text>
-                          {racerSplits[index] !== undefined ? racerSplits[index] : '-'}
+                          {racerSplits[parseInt(selectedSegment, 10)] ?? '-'}
                         </Text>
                       </Table.Cell>
-                    ))}
-                  {(selectedSegment === 'All' || selectedSegment === 'Total') && (
-                    <Table.Cell textAlign="center">
-                      <Text>{racer.pointTotal ?? '-'}</Text>
-                    </Table.Cell>
-                  )}
-                  {selectedSegment !== 'All' && selectedSegment !== 'Total' && (
-                    <Table.Cell textAlign="center">
-                      <Text>
-                        {racerSplits[parseInt(selectedSegment, 10)] ?? '-'}
-                      </Text>
-                    </Table.Cell>
-                  )}
-                </Table.Row>
-              );
-            })}
+                    )}
+                  </Table.Row>
+                );
+              })
+            ) : (
+              <Table.Row>
+                <Table.Cell textAlign="center" colSpan={segmentScores.length + 2}>
+                  <Text>Ingen resultater endnu.</Text>
+                </Table.Cell>
+              </Table.Row>
+            )}
           </Table.Body>
         </Table.Root>
       </Table.ScrollArea>
