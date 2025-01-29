@@ -66,8 +66,6 @@ const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
           width="150px"
           zIndex={10}
         />
-  
-        {/* Table Container */}
         <Flex flex={1} alignItems="center" justifyContent="center" position="relative" zIndex={2} marginTop={6}>
           <Box 
             boxShadow="lg" 
@@ -76,14 +74,14 @@ const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
             bg="rgba(255, 255, 255, 0.1)" 
             backdropFilter="blur(10px)"
           >
-            <Table.Root size="lg" minW="70vw" maxW="90vw" minH="40vh" textStyle="xl">
+            <Table.Root size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
               <Table.Header textStyle="2xl">
                 <Table.Row bg="rgb(31, 35, 62)" color="white">
                   <Table.ColumnHeader textAlign="right" width="10%" px="5px">Heat 2</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="left" width="25%" px="5px">{category.charAt(0).toUpperCase() + category.slice(1)}</Table.ColumnHeader>
-                  {segmentScores.map((segment, index) => (<Table.ColumnHeader key={index} textAlign="center">{segment.name} [{segment.repeat}]</Table.ColumnHeader>))}
-                  <Table.ColumnHeader textAlign="center">Samlet</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center">Resultat Heat 2</Table.ColumnHeader> {/* New column for leaguePoints */}
+                  <Table.ColumnHeader textAlign="left" width="15%" px="5px">{category.charAt(0).toUpperCase() + category.slice(1)}</Table.ColumnHeader>
+                  {segmentScores.map((segment, index) => (<Table.ColumnHeader key={index} textAlign="center" width="10%">Spurt {segment.repeat}</Table.ColumnHeader>))}
+                  <Table.ColumnHeader textAlign="center" width="10%">Samlet</Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="center" width="15%">Resultat Heat 2</Table.ColumnHeader> {/* New column for leaguePoints */}
                 </Table.Row>
               </Table.Header>
               <Table.Body>
