@@ -4,6 +4,7 @@ export type RacerScore = {
     athleteId: number;
     name: string;
     durationTime: string;
+    durationMs: number;
     falPointTotal: number;
     ftsPointTotal: number;
     finPoints: number;

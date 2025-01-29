@@ -28,7 +28,7 @@ type EnkeltstartProps = {
 
 const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   const { racerScores, segmentScores } = data;
-
+  console.log(data)
   const [selectedSegment, setSelectedSegment] = useState<string>('All'); // State is a single string
 
   if (!racerScores || !Array.isArray(racerScores)) {
@@ -62,7 +62,7 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
     }
     return acc;
   }, {} as Record<string, { name: string; splits: string[] }>);
-
+  console.log(splits)
   // Sort racers based on the selected segment
   const sortedRacers = [...racerScores].sort((a, b) => {
     if (selectedSegment === 'All') {

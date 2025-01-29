@@ -8,9 +8,11 @@ import { getDb } from '@/app/utils/firebaseClient';
 import rawEventMap from '@/app/data/eventMap.json';
 
 import { RaceData, EventMap } from '@/app/types';
-import Enkeltstart from '@/app/components/enkeltstart';
+import Heat1 from '@/app/components/heat1';
 import Point from '@/app/components/point';
 import Linje from '@/app/components/linje';
+
+import * as styles from './page.module.css';
 
 const eventMap = rawEventMap as EventMap;
 
@@ -66,8 +68,8 @@ const RacePage: React.FC = () => {
   // Function to render race-specific component
   const renderRaceComponent = (raceData: RaceData) => {
     switch (raceKey) {
-      case 'enkeltstart':
-        return <Enkeltstart data={raceData} category={category as string} race={race as string} />;
+      case 'heat1':
+        return <Heat1 data={raceData} category={category as string} race={race as string} />;
       case 'point':
         return <Point data={raceData} category={category as string} race={race as string} />;
       case 'linje':
@@ -81,53 +83,19 @@ const RacePage: React.FC = () => {
         );
     }
   };
-
-  // Handle invalid eventID
-  if (!eventID && !loading) {
-    return (
-      <main>
-        <h1>Invalid Route</h1>
-        <p>
-          No eventID found for category {categoryStr} and race {raceStr} in
-          eventMap.json.
-        </p>
-      </main>
-    );
-  }
-
-  // Handle loading state
-  if (loading) {
-    return (
-      <main>
-        <p>Loading data for eventID: {eventID}...</p>
-      </main>
-    );
-  }
-
-  // Handle error state
-  if (error) {
-    return (
-      <main>
-        <h1>Error</h1>
-        <p>{error}</p>
-      </main>
-    );
-  }
-
-  // Handle no data state
-  if (!data) {
-    return (
-      <main>
-        <p>No results. Stay tuned!</p>
-      </main>
-    );
-  }
-
-  // At this point, data is guaranteed to be non-null
   return (
-    <main>
-      {/* Render the race-specific component */}
-      {renderRaceComponent(data)}
+    <main className={(styles as any).background}>
+      <div className={(styles as any).content}>
+        {loading && <p>Loading data for eventID: {eventID}...</p>}
+        {error && (
+          <>
+            <h1>Error</h1>
+            <p>{error}</p>
+          </>
+        )}
+        {!loading && !error && !data && <p>No results. Stay tuned!</p>}
+        {!loading && !error && data && renderRaceComponent(data)}
+      </div>
     </main>
   );
 };

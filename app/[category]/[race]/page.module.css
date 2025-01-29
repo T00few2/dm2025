@@ -1,0 +1,33 @@
+.background {
+    position: relative;
+    background-image: url('/resultat_baggrund.jpg'); /* Ensure image path is correct */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white; /* Adjust text color for readability */
+  }
+  
+  /* Blue Overlay Effect */
+  .background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 255, 0.5); /* Blue overlay */
+    z-index: 1;
+  }
+  
+  /* Ensures content is on top of overlay */
+  .content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  
