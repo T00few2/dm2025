@@ -42,9 +42,8 @@ export default function Home() {
       <Stack>
         {/* HEADER */}
         <Box position="relative" zIndex={2} textAlign="center" py={6}>
-          <Heading color="black" fontWeight="bolder" as="h2" size="7xl">
-            DM e-cykling 2025 - Løbsresultater
-          </Heading>
+          <Heading color="black" fontWeight="bolder" as="h2" size="7xl">DM e-cykling 2025</Heading>
+          <Heading color="black" fontWeight="bolder" as="h2" size="4xl">Løbsresultater</Heading>
         </Box>
 
         {/* PNG Logo in Top Right Corner */}
