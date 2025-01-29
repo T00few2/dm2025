@@ -65,9 +65,7 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
           textAlign="center" 
           py={6} 
         >
-          <Heading color={'black'} fontWeight={'bolder'} as="h2" size="7xl">
-            DM e-cykling 2025
-          </Heading>
+          <Heading color={'black'} fontWeight={'bolder'} as="h2" size="7xl">DM e-cykling 2025</Heading>
           {/*<Heading color={'black'} fontWeight={'bolder'} as="h2" size="5xl">
             {category.charAt(0).toUpperCase() + category.slice(1)} Heat 1
           </Heading> */}
@@ -103,16 +101,19 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
               <Table.Root size='lg' minW="70vw" maxW='90vw' minH='40vh' textStyle={'xl'} >
                 <Table.Header textStyle={'2xl'}>
                   <Table.Row bg='rgb(31, 35, 62)' color="white">
-                    <Table.ColumnHeader textAlign="right" width='10%' px='5px'> Heat 1</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="left" width='30%' px='5px'>{category.charAt(0).toUpperCase() + category.slice(1)}</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='30%'>Tid</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='30%'>Resultat Heat 1</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="right" width='10%' px='5px'>Heat 1</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="left" width='25%' px='5px'>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="center" width='20%'>Tid</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="center" width='20%'>Forskel</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="center" width='25%'>Resultat Heat 1</Table.ColumnHeader>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
                   {topRacers.map((racer, index) => (
                     <Table.Row key={racer.athleteId} bg={index % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
-                      <Table.Cell textAlign="right"  px='15px'>
+                      <Table.Cell textAlign="right" px='15px'>
                         <Text>{index + 1}</Text>
                       </Table.Cell>
                       <Table.Cell textAlign="left">
@@ -125,6 +126,14 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
                           <Text>-</Text>
                         )}
                       </Table.Cell>
+                      <Table.Cell textAlign="center"> {/* New Cell for Time Difference */}
+                      {index === 0 ? (
+                          <Text>-</Text> // First row shows "-"
+                        ) : (
+                          <Text>+ {racer.timeDifference ?? '-'}</Text> // Other rows show "+ timeDifference"
+                        )}
+                        
+                      </Table.Cell>
                       <Table.Cell textAlign="center">
                         <Text>{racer.leaguePoints ?? '-'}</Text>
                       </Table.Cell>
@@ -132,10 +141,26 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
                   ))}
                 </Table.Body>
               </Table.Root>
-            
           </Box>
-        </Flex>
-        </Stack>
+          </Flex>
+          <Box 
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          mt={10} // Adds spacing between table and banner
+          >
+            <Image 
+              src="/dm_banner.png" // Replace with actual image path
+              alt="Bottom Banner"
+              width="60%" // Adjust the size as needed
+              maxW="70%" // Ensures it doesn’t get too large
+              objectFit="contain"
+              zIndex={2}
+              mb={6}
+            />
+          </Box>
+          </Stack>
       </Box>
     );
   };

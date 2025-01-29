@@ -10,6 +10,7 @@ export type RacerScore = {
     finPoints: number;
     pointTotal: number;
     leaguePoints: number;
+    timeDifference: string;
 };
   
 export type SegmentScore = {
