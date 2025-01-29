@@ -7,10 +7,9 @@ import { Table, Text, Box, Heading, Flex, Image, Stack } from '@chakra-ui/react'
 type Heat2Props = {
   data: RaceData;
   category: string;
-  race: string;
 };
 
-const Heat2: React.FC<Heat2Props> = ({ data, category, race }) => {
+const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
   const { racerScores = [], segmentScores = [] } = data;
 
   // Aggregate split points per racer
@@ -54,9 +53,7 @@ const Heat2: React.FC<Heat2Props> = ({ data, category, race }) => {
       <Stack>
         {/* HEADER */}
         <Box position="relative" zIndex={2} textAlign="center" py={6}>
-          <Heading color="black" fontWeight="bolder" as="h2" size="7xl">
-            DM e-cykling 2025
-          </Heading>
+          <Heading color="black" fontWeight="bolder" as="h2" size="7xl">DM e-cykling 2025</Heading>
         </Box>
 
         {/* PNG Logo in Top Right Corner */}
@@ -82,49 +79,27 @@ const Heat2: React.FC<Heat2Props> = ({ data, category, race }) => {
             <Table.Root size="lg" minW="70vw" maxW="90vw" minH="40vh" textStyle="xl">
               <Table.Header textStyle="2xl">
                 <Table.Row bg="rgb(31, 35, 62)" color="white">
-                  <Table.ColumnHeader textAlign="right" width="10%" px="5px">
-                    Heat 2
-                  </Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="left" width="25%" px="5px">
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </Table.ColumnHeader>
-                  {segmentScores.map((segment, index) => (
-                    <Table.ColumnHeader key={index} textAlign="center">
-                      {segment.name} [{segment.repeat}]
-                    </Table.ColumnHeader>
-                  ))}
+                  <Table.ColumnHeader textAlign="right" width="10%" px="5px">Heat 2</Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="left" width="25%" px="5px">{category.charAt(0).toUpperCase() + category.slice(1)}</Table.ColumnHeader>
+                  {segmentScores.map((segment, index) => (<Table.ColumnHeader key={index} textAlign="center">{segment.name} [{segment.repeat}]</Table.ColumnHeader>))}
                   <Table.ColumnHeader textAlign="center">Samlet</Table.ColumnHeader>
                   <Table.ColumnHeader textAlign="center">Resultat Heat 2</Table.ColumnHeader> {/* New column for leaguePoints */}
                 </Table.Row>
               </Table.Header>
-
               <Table.Body>
                 {sortedRacers.map((racer: RacerScore, index: number) => (
-                  <Table.Row key={racer.athleteId} bg={index % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
-                    <Table.Cell textAlign="right" px="15px">
-                      <Text>{index + 1}</Text>
-                    </Table.Cell>
-                    <Table.Cell textAlign="left">
-                      <Text>{racer.name}</Text>
-                    </Table.Cell>
-                    {segmentScores.map((_, segmentIndex) => (
-                      <Table.Cell key={segmentIndex} textAlign="center">
-                        <Text>{splits[racer.athleteId]?.splits[segmentIndex] ?? '-'}</Text>
-                      </Table.Cell>
-                    ))}
-                    <Table.Cell textAlign="center">
-                      <Text>{racer.pointTotal ?? '-'}</Text>
-                    </Table.Cell>
-                    <Table.Cell textAlign="center">
-                      <Text>{racer.leaguePoints ?? '-'}</Text> {/* League points column */}
-                    </Table.Cell>
-                  </Table.Row>
+                    <Table.Row key={racer.athleteId} bg={index % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
+                    <Table.Cell textAlign="right" px="15px"><Text>{index + 1}</Text></Table.Cell>
+                    <Table.Cell textAlign="left"><Text>{racer.name}</Text></Table.Cell>
+                    {segmentScores.map((_, segmentIndex) => (<Table.Cell key={segmentIndex} textAlign="center"><Text>{splits[racer.athleteId]?.splits[segmentIndex] ?? '-'}</Text></Table.Cell>))}
+                    <Table.Cell textAlign="center"><Text>{racer.pointTotal ?? '-'}</Text></Table.Cell>
+                    <Table.Cell textAlign="center"><Text>{racer.leaguePoints ?? '-'}</Text></Table.Cell>
+                    </Table.Row>
                 ))}
-              </Table.Body>
+                </Table.Body>
             </Table.Root>
           </Box>
         </Flex>
-
         {/* Bottom Banner */}
         <Box display="flex" alignItems="center" justifyContent="center" width="100%" mt={10}>
           <Image 
