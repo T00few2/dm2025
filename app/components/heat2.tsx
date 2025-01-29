@@ -74,7 +74,7 @@ const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
             bg="rgba(255, 255, 255, 0.1)" 
             backdropFilter="blur(10px)"
           >
-            <Table.Root size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
+            <Table.Root color='white' size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
               <Table.Header textStyle="2xl">
                 <Table.Row bg="rgb(31, 35, 62)" color="white">
                   <Table.ColumnHeader textAlign="right" width="10%" px="5px">Heat 2</Table.ColumnHeader>
