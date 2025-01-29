@@ -63,10 +63,10 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
           py={6} 
           
         >
-          <Heading as="h2" size="7xl">
+          <Heading color={'black'} fontWeight={'bolder'} as="h2" size="7xl">
             DM e-cykling 2025
           </Heading>
-          <Heading as="h2" size="5xl">
+          <Heading color={'black'} fontWeight={'bolder'} as="h2" size="5xl">
             {category.charAt(0).toUpperCase() + category.slice(1)} Heat 1
           </Heading>
         </Box>
@@ -79,10 +79,8 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
           position="relative" 
           zIndex={2} 
         >
-          <Box
-          >
-            <Table.ScrollArea borderWidth="1px" rounded="md" maxH="60vh">
-              <Table.Root stickyHeader size="sm" minW="600px" interactive showColumnBorder>
+          <Box>
+              <Table.Root size="md" minW="70vw" minH='40vh' textStyle={'xl'} striped colorPalette={'blue'}>
                 <Table.Header>
                   <Table.Row bg="bg.subtle">
                     <Table.ColumnHeader textAlign="center" width="50px">#</Table.ColumnHeader>
@@ -97,7 +95,7 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
                       <Table.Cell textAlign="center">
                         <Text>{index + 1}</Text>
                       </Table.Cell>
-                      <Table.Cell textAlign="left" bg="bg.subtle">
+                      <Table.Cell textAlign="left">
                         <Text>{racer.name}</Text>
                       </Table.Cell>
                       <Table.Cell textAlign="center">
@@ -114,7 +112,7 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
                   ))}
                 </Table.Body>
               </Table.Root>
-            </Table.ScrollArea>
+            
           </Box>
         </Flex>
       </Box>
