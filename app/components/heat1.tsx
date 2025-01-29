@@ -1,7 +1,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { EventMap, RaceData, RacerScore } from '@/app/types';
+import { RaceData, RacerScore } from '@/app/types';
 import { 
   Table, 
   Text, 
@@ -13,10 +13,10 @@ import { millisecondsToDurationTime } from '@/app/utils/timeUtils';
 type Heat1Props = {
   data: RaceData;
   category: string;
-  race: string;
+  
 };
 
-const Heat1: React.FC<Heat1Props> = ({ data, category, race }) => {
+const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
   const { racerScores } = data;
 
   if (!racerScores || !Array.isArray(racerScores)) {
@@ -32,67 +32,75 @@ const Heat1: React.FC<Heat1Props> = ({ data, category, race }) => {
     })
     .slice(0, 16); // Still only show top 16
   
-  return (
-    <Box p={4}>
-      <Heading as="h2" size="lg" mb={4}>
-        DM e-cykling 2025 : {category.charAt(0).toUpperCase() + category.slice(1)} Heat 1
-      </Heading>
-      <Table.ScrollArea borderWidth="1px" rounded="md" maxH={'80vh'}>
-        <Table.Root stickyHeader size="sm" minW="full" interactive showColumnBorder>
-          <Table.Header>
-            <Table.Row bg="bg.subtle">
-              <Table.ColumnHeader textAlign="center" width="50px">
-                #
-              </Table.ColumnHeader>
-              <Table.ColumnHeader 
-                textAlign="left" 
-                bg="bg.subtle"
-              >
-                Navn
-              </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center">Tid</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center">Resultat Heat 1</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {topRacers.map((racer: RacerScore, index) => {
-              const formattedDuration = racer.durationMs !== undefined 
-                ? millisecondsToDurationTime(racer.durationMs) 
-                : '-';
-
-              return (
-                <Table.Row key={racer.athleteId}>
-                  <Table.Cell textAlign="center">
-                    <Text>{index + 1}</Text> {/* Placement number */}
-                  </Table.Cell>
-                  <Table.Cell textAlign="left" bg="bg.subtle">
-                    <Text>{racer.name}</Text>
-                  </Table.Cell>
-                  <Table.Cell textAlign="center">
-                    {formattedDuration !== '-' ? (
-                      <>
-                        {formattedDuration.split('.')[0]}
-                        {formattedDuration.includes('.') && (
-                          <Text as="span" fontSize="xs" ml={1}>
-                            .{formattedDuration.split('.')[1]}
-                          </Text>
-                        )}
-                      </>
-                    ) : (
-                      <Text>-</Text>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell textAlign="center">
-                    <Text>{racer.leaguePoints ?? '-'}</Text> {/* Show "-" if missing */}
-                  </Table.Cell>
+    return (
+      <Box 
+        p={4} 
+        minH="100vh"
+        bgImage="url('/resultat_baggrund.jpg')" 
+        bgSize="cover"
+        bgPos={'center'}
+        position="relative"
+        color="white"
+      >
+        {/* Blue Overlay */}
+        <Box 
+          position="absolute"
+          top={0}
+          left={0}
+          width="100%"
+          height="100%"
+          bg="rgba(0, 0, 255, 0.5)"
+          zIndex={1}
+        />
+  
+        <Box position="relative" zIndex={2} textAlign="center">
+          <Heading as="h2" size="lg" mb={4}>
+            DM e-cykling 2025
+          </Heading>
+          <Heading as="h2" size="lg" mb={4}>
+            {category.charAt(0).toUpperCase() + category.slice(1)} Heat 1
+          </Heading>
+          <Table.ScrollArea borderWidth="1px" rounded="md" maxH="80vh">
+            <Table.Root stickyHeader size="sm" minW="full" interactive showColumnBorder>
+              <Table.Header>
+                <Table.Row bg="bg.subtle">
+                  <Table.ColumnHeader textAlign="center" width="50px">
+                    #
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="left" bg="bg.subtle">
+                    Navn
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="center">Tid</Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="center">Resultat Heat 1</Table.ColumnHeader>
                 </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table.Root>
-      </Table.ScrollArea>
-    </Box>
-  );
-};
-
-export default memo(Heat1);
+              </Table.Header>
+              <Table.Body>
+                {topRacers.map((racer, index) => (
+                  <Table.Row key={racer.athleteId}>
+                    <Table.Cell textAlign="center">
+                      <Text>{index + 1}</Text>
+                    </Table.Cell>
+                    <Table.Cell textAlign="left" bg="bg.subtle">
+                      <Text>{racer.name}</Text>
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {racer.durationMs !== undefined ? (
+                        <Text>{millisecondsToDurationTime(racer.durationMs)}</Text>
+                      ) : (
+                        <Text>-</Text>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      <Text>{racer.leaguePoints ?? '-'}</Text>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+          </Table.ScrollArea>
+        </Box>
+      </Box>
+    );
+  };
+  
+  export default memo(Heat1);
