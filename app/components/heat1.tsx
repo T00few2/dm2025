@@ -1,12 +1,13 @@
 'use client';
 
 import React, { memo } from 'react';
-import { RaceData, RacerScore } from '@/app/types';
+import { RaceData } from '@/app/types';
 import { 
   Table, 
   Text, 
   Box, 
-  Heading
+  Heading,
+  Flex
 } from '@chakra-ui/react';
 import { millisecondsToDurationTime } from '@/app/utils/timeUtils';
 
@@ -34,13 +35,14 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
   
     return (
       <Box 
-        p={4} 
         minH="100vh"
         bgImage="url('/resultat_baggrund.jpg')" 
         bgSize="cover"
-        bgPos={'center'}
+        
         position="relative"
         color="white"
+        display="flex"
+        flexDirection="column"
       >
         {/* Blue Overlay */}
         <Box 
@@ -53,52 +55,68 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
           zIndex={1}
         />
   
-        <Box position="relative" zIndex={2} textAlign="center">
-          <Heading as="h2" size="lg" mb={4}>
+        {/* HEADER - Fixed at the top */}
+        <Box 
+          position="relative" 
+          zIndex={2} 
+          textAlign="center" 
+          py={6} 
+          
+        >
+          <Heading as="h2" size="7xl">
             DM e-cykling 2025
           </Heading>
-          <Heading as="h2" size="lg" mb={4}>
+          <Heading as="h2" size="5xl">
             {category.charAt(0).toUpperCase() + category.slice(1)} Heat 1
           </Heading>
-          <Table.ScrollArea borderWidth="1px" rounded="md" maxH="80vh">
-            <Table.Root stickyHeader size="sm" minW="full" interactive showColumnBorder>
-              <Table.Header>
-                <Table.Row bg="bg.subtle">
-                  <Table.ColumnHeader textAlign="center" width="50px">
-                    #
-                  </Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="left" bg="bg.subtle">
-                    Navn
-                  </Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center">Tid</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center">Resultat Heat 1</Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {topRacers.map((racer, index) => (
-                  <Table.Row key={racer.athleteId}>
-                    <Table.Cell textAlign="center">
-                      <Text>{index + 1}</Text>
-                    </Table.Cell>
-                    <Table.Cell textAlign="left" bg="bg.subtle">
-                      <Text>{racer.name}</Text>
-                    </Table.Cell>
-                    <Table.Cell textAlign="center">
-                      {racer.durationMs !== undefined ? (
-                        <Text>{millisecondsToDurationTime(racer.durationMs)}</Text>
-                      ) : (
-                        <Text>-</Text>
-                      )}
-                    </Table.Cell>
-                    <Table.Cell textAlign="center">
-                      <Text>{racer.leaguePoints ?? '-'}</Text>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Root>
-          </Table.ScrollArea>
         </Box>
+  
+        {/* FLEX CONTAINER - Centers the table */}
+        <Flex 
+          flex={1} 
+          alignItems="center"
+          justifyContent="center"
+          position="relative" 
+          zIndex={2} 
+        >
+          <Box
+          >
+            <Table.ScrollArea borderWidth="1px" rounded="md" maxH="60vh">
+              <Table.Root stickyHeader size="sm" minW="600px" interactive showColumnBorder>
+                <Table.Header>
+                  <Table.Row bg="bg.subtle">
+                    <Table.ColumnHeader textAlign="center" width="50px">#</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="left" bg="bg.subtle">Navn</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="center">Tid</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="center">Resultat Heat 1</Table.ColumnHeader>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {topRacers.map((racer, index) => (
+                    <Table.Row key={racer.athleteId}>
+                      <Table.Cell textAlign="center">
+                        <Text>{index + 1}</Text>
+                      </Table.Cell>
+                      <Table.Cell textAlign="left" bg="bg.subtle">
+                        <Text>{racer.name}</Text>
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {racer.durationMs !== undefined ? (
+                          <Text>{millisecondsToDurationTime(racer.durationMs)}</Text>
+                        ) : (
+                          <Text>-</Text>
+                        )}
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        <Text>{racer.leaguePoints ?? '-'}</Text>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table.Root>
+            </Table.ScrollArea>
+          </Box>
+        </Flex>
       </Box>
     );
   };

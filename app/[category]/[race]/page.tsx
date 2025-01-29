@@ -12,8 +12,6 @@ import Heat1 from '@/app/components/heat1';
 import Point from '@/app/components/point';
 import Linje from '@/app/components/linje';
 
-import styles from './page.module.css'; // Import CSS module
-
 const eventMap = rawEventMap as EventMap;
 
 const RacePage: React.FC = () => {
