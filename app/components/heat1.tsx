@@ -149,15 +149,17 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
           justifyContent="center"
           width="100%"
           mt={10} // Adds spacing between table and banner
+          
           >
             <Image 
               src="/dm_banner.png" // Replace with actual image path
               alt="Bottom Banner"
-              width="60%" // Adjust the size as needed
-              maxW="70%" // Ensures it doesn’t get too large
+              width="50%" // Adjust the size as needed
+              maxW="60%" // Ensures it doesn’t get too large
               objectFit="contain"
               zIndex={2}
               mb={6}
+              opacity={0.5} 
             />
           </Box>
           </Stack>

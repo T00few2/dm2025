@@ -13,13 +13,13 @@ import {
 } from '@chakra-ui/react';
 import { millisecondsToDurationTime } from '@/app/utils/timeUtils';
 
-type Heat1Props = {
+type Heat3Props = {
   data: RaceData;
   category: string;
   
 };
 
-const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
+const Heat3: React.FC<Heat3Props> = ({ data, category }) => {
   const { racerScores } = data;
 
   if (!racerScores || !Array.isArray(racerScores)) {
@@ -167,4 +167,4 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
     );
   };
   
-  export default memo(Heat1);
+  export default memo(Heat3);

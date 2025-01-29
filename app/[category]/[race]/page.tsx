@@ -10,7 +10,7 @@ import rawEventMap from '@/app/data/eventMap.json';
 import { RaceData, EventMap } from '@/app/types';
 import Heat1 from '@/app/components/heat1';
 import Point from '@/app/components/point';
-import Linje from '@/app/components/linje';
+import Heat3 from '@/app/components/heat3';
 
 const eventMap = rawEventMap as EventMap;
 
@@ -71,7 +71,7 @@ const RacePage: React.FC = () => {
       case 'point':
         return <Point data={raceData} category={category as string} race={race as string} />;
       case 'linje':
-        return <Linje data={raceData} category={category as string} race={race as string}  />;
+        return <Heat3 data={raceData} category={category as string}/>;
       default:
         return (
           <div>
