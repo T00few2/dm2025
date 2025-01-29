@@ -152,7 +152,7 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
           
           >
             <Image 
-              src="/dm_banner.png" // Replace with actual image path
+              src="/dm_banner.PNG" // Replace with actual image path
               alt="Bottom Banner"
               width="50%" // Adjust the size as needed
               maxW="60%" // Ensures it doesn’t get too large
