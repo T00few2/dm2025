@@ -61,11 +61,11 @@ export default function Home() {
             backdropFilter="blur(10px)"
           >
             <Table.Root color='white' size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
-              <Table.Header textStyle="2xl">
-                <Table.Row bg="rgb(31, 35, 62)" color="white">
-                  <Table.ColumnHeader textAlign="left" px="25px" width = '40%'>Kategori</Table.ColumnHeader>
+              <Table.Header color='white' textStyle="2xl">
+                <Table.Row color='white' bg="rgb(31, 35, 62)">
+                  <Table.ColumnHeader color='white' textAlign="left" px="25px" width = '40%'>Kategori</Table.ColumnHeader>
                   {Object.keys(typedEventMap[categories[0]]).map((race) => (
-                    <Table.ColumnHeader key={race} textAlign="center" width = '15%'>{race.replace(/heat(\d+)/i, 'Heat $1')}</Table.ColumnHeader>
+                    <Table.ColumnHeader color='white' key={race} textAlign="center" width = '15%'>{race.replace(/heat(\d+)/i, 'Heat $1')}</Table.ColumnHeader>
                   ))}
                 </Table.Row>
               </Table.Header>
