@@ -1,170 +1,207 @@
 'use client';
 
-import React, { memo } from 'react';
-import { RaceData } from '@/app/types';
+import React, { memo, useState } from 'react';
+import { RaceData, RacerScore } from '@/app/types';
 import { 
   Table, 
   Text, 
   Box, 
-  Heading,
+  Heading, 
+  createListCollection ,
   Flex,
-  Image,
-  Stack
 } from '@chakra-ui/react';
-import { millisecondsToDurationTime } from '@/app/utils/timeUtils';
+import {
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from '@/components/ui/select';
+import { parseDurationTime } from '@/app/utils/timeUtils';
 
-type Heat1Props = {
+type EnkeltstartProps = {
   data: RaceData;
   category: string;
-  
+  race: string;
 };
 
-const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
-  const { racerScores } = data;
+const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
+  const { racerScores, segmentScores } = data;
+
+  const [selectedSegment, setSelectedSegment] = useState<string>('All'); // State is a single string
 
   if (!racerScores || !Array.isArray(racerScores)) {
-    return <Text>Ingen resultater for enkeltstarten.</Text>;
+    return <Text>Ingen resultater for linjeløbet.</Text>;
+  }
+  console.log(racerScores)
+
+  if (!segmentScores || !Array.isArray(segmentScores)) {
+    return <Text>Ingen resultater for linjeløbet.</Text>;
   }
 
-  // Sort racers by durationMs, placing those without it at the bottom
-  const topRacers = [...racerScores]
-    .sort((a, b) => {
-      const timeA = a.durationMs ?? Number.MAX_VALUE; // Move missing times to the bottom
-      const timeB = b.durationMs ?? Number.MAX_VALUE;
-      return timeA - timeB;
-    })
-    .slice(0, 16); // Still only show top 16
-  
-    return (
-      <Box 
-        minH="100vh"
-        bgImage="url('/resultat_baggrund.jpg')" 
-        bgSize="cover"
-        
-        position="relative"
-        color="white"
-        display="flex"
-        flexDirection="column"
-      >
-        {/* Blue Overlay */}
-        <Box 
-          position="absolute"
-          top={0}
-          left={0}
-          width="100%"
-          height="100%"
-          bg="rgba(77, 93, 146, 0.5)"
-          backdropFilter="blur(5px)"
-          zIndex={1}
-        />
-      <Stack>
-        {/* HEADER - Fixed at the top */}
-        <Box 
-          position="relative" 
-          zIndex={2} 
-          textAlign="center" 
-          py={6} 
-        >
-          <Heading color={'black'} fontWeight={'bolder'} as="h2" size="7xl">DM e-cykling 2025</Heading>
-          {/*<Heading color={'black'} fontWeight={'bolder'} as="h2" size="5xl">
-            {category.charAt(0).toUpperCase() + category.slice(1)} Heat 1
-          </Heading> */}
-        </Box>
+  // Create a collection for segment selection
+  const segmentOptions = createListCollection({
+    items: [
+      { label: 'All', value: 'All' },
+      ...segmentScores.map((segment, index) => ({
+        label: `${segment.name} [${segment.repeat}]`,
+        value: index.toString(),
+      })),
+    ],
+  });
 
-         {/* PNG Image in Top Right Corner */}
-      <Image
-        src="/DCU_Fullcolour_transparent.png" // Change this to your actual image path
-        alt="Top Right Logo"
-        position="absolute"
-        top="40px"
-        right="40px"
-        width={'150px'}
-        zIndex={10}
-      />
-  
-        {/* FLEX CONTAINER - Centers the table */}
-        <Flex 
-          flex={1} 
-          alignItems="center"
-          justifyContent="center"
-          position="relative" 
-          zIndex={2} 
-          marginTop={6}
-        >
-          <Box 
-            boxShadow="lg" // Large shadow
-            borderRadius="md" // Rounded corners
-            overflow="hidden" // Ensures the shadow applies correctly
-            bg="rgba(255, 255, 255, 0.1)" // Semi-transparent white background
-            backdropFilter="blur(10px)" // Adds a frosted-glass effect
-          >
-              <Table.Root size='lg' minW="70vw" maxW='90vw' minH='40vh' textStyle={'xl'} >
-                <Table.Header textStyle={'2xl'}>
-                  <Table.Row bg='rgb(31, 35, 62)' color="white">
-                    <Table.ColumnHeader textAlign="right" width='10%' px='5px'>Heat 3</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="left" width='25%' px='5px'>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
+  // Aggregate all split times per racer
+  const splits = segmentScores.reduce((acc, segment, segmentIndex) => {
+    if (Array.isArray(segment.fal)) { // Ensure `segment.fal` is an array
+      segment.fal.forEach((fal) => {
+        if (!acc[fal.athleteId]) {
+          acc[fal.athleteId] = { name: fal.name, splits: [] };
+        }
+        acc[fal.athleteId].splits[segmentIndex] = fal.eventTimeDisplay;
+      });
+    }
+    return acc;
+  }, {} as Record<string, { name: string; splits: string[] }>);
+
+  // Sort racers based on the selected segment
+  const sortedRacers = [...racerScores].sort((a, b) => {
+    if (selectedSegment === 'All') {
+      const durationA = parseDurationTime(a.durationTime);
+      const durationB = parseDurationTime(b.durationTime);
+      return durationA - durationB;
+    } else {
+      const segmentIndex = parseInt(selectedSegment, 10);
+      const timeA = parseDurationTime(splits[a.athleteId]?.splits[segmentIndex] || '99:99:99');
+      const timeB = parseDurationTime(splits[b.athleteId]?.splits[segmentIndex] || '99:99:99');
+      return timeA - timeB;
+    }
+  });
+
+  return (
+    <Box p={4}>
+      <Heading as="h2" size="lg" mb={4}>
+        {category} {race}
+      </Heading>
+      <SelectRoot
+        collection={segmentOptions}
+        size="sm"
+        width="320px"
+        
+        onValueChange={(details) => {
+          const value = Array.isArray(details.value) ? details.value[0] : details.value;
+          setSelectedSegment(value);
+        }}
+      >
+        <Flex align="center" mb={4}>
+        <SelectLabel mr={4}>Mellemtider</SelectLabel>
+        <SelectTrigger width={'300px'}>
+        <SelectValueText placeholder="Vælg mellemtid" />
+        </SelectTrigger>
+        <SelectContent>
+          {segmentOptions.items.map((option) => (
+            <SelectItem item={option} key={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+        </Flex>
+      </SelectRoot>
+      <Table.ScrollArea borderWidth="1px" rounded="md" maxH={'80vh'}>
+        <Table.Root stickyHeader size="sm" minW="full" interactive showColumnBorder>
+          <Table.Header>
+            <Table.Row bg="bg.subtle">
+            <Table.ColumnHeader 
+          textAlign="left" 
+          position="sticky" 
+          left="0" 
+          bg="bg.subtle"
+        >Navn</Table.ColumnHeader>
+              {selectedSegment === 'All'
+                ? segmentScores.map((segment, index) => (
+                    <Table.ColumnHeader key={index} textAlign="center">
+                      {segment.name} [{segment.repeat}]
                     </Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='20%'>Tid</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='20%'>Forskel</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='25%'>Resultat Heat 3</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {topRacers.map((racer, index) => (
-                    <Table.Row key={racer.athleteId} bg={index % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
-                      <Table.Cell textAlign="right" px='15px'>
-                        <Text>{index + 1}</Text>
-                      </Table.Cell>
-                      <Table.Cell textAlign="left">
-                        <Text>{racer.name}</Text>
-                      </Table.Cell>
-                      <Table.Cell textAlign="center">
-                        {racer.durationMs !== undefined ? (
-                          <Text>{millisecondsToDurationTime(racer.durationMs)}</Text>
-                        ) : (
-                          <Text>-</Text>
-                        )}
-                      </Table.Cell>
-                      <Table.Cell textAlign="center"> {/* New Cell for Time Difference */}
-                      {index === 0 ? (
-                          <Text>-</Text> // First row shows "-"
-                        ) : (
-                          <Text>+ {racer.timeDifference ?? '-'}</Text> // Other rows show "+ timeDifference"
-                        )}
-                        
-                      </Table.Cell>
-                      <Table.Cell textAlign="center">
-                        <Text>{racer.leaguePoints ?? '-'}</Text>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
-          </Box>
-          </Flex>
-          <Box 
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width="100%"
-          mt={10} // Adds spacing between table and banner
-          
-          >
-            <Image 
-              src="/dm_banner.png" // Replace with actual image path
-              alt="Bottom Banner"
-              width="50%" // Adjust the size as needed
-              maxW="60%" // Ensures it doesn’t get too large
-              objectFit="contain"
-              zIndex={2}
-              mb={6}
-              opacity={0.5} 
-            />
-          </Box>
-          </Stack>
-      </Box>
-    );
-  };
-  
-  export default memo(Heat1);
+                  ))
+                : (
+                    <Table.ColumnHeader textAlign="center">
+                      {segmentScores[parseInt(selectedSegment, 10)]?.name} [
+                      {segmentScores[parseInt(selectedSegment, 10)]?.repeat}]
+                    </Table.ColumnHeader>
+                  )}
+              {selectedSegment === 'All' && (
+                <>
+                  <Table.ColumnHeader textAlign="center">Tid</Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="center">Point</Table.ColumnHeader>
+                </>
+              )}
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {sortedRacers.map((racer: RacerScore) => {
+              const racerSplits = splits[racer.athleteId]?.splits || [];
+              return (
+                <Table.Row key={racer.athleteId}>
+                     <Table.Cell 
+              textAlign="left" 
+              position="sticky" 
+              left="0" 
+              zIndex="1" 
+              bg="bg.subtle"
+            >
+                    <Text>{racer.name}</Text>
+                  </Table.Cell>
+                  {selectedSegment === 'All'
+                    ? segmentScores.map((_, index) => (
+                        <Table.Cell key={index} textAlign="center">
+                          <Text>
+                            {racerSplits[index]?.split('.')[0] || '-'}
+                            {racerSplits[index]?.includes('.') && (
+                              <Text as="span" fontSize="xs" ml={1}>
+                                .{racerSplits[index]?.split('.')[1]}
+                              </Text>
+                            )}
+                          </Text>
+                        </Table.Cell>
+                      ))
+                    : (
+                        <Table.Cell textAlign="center">
+                          <Text>
+                            {racerSplits[parseInt(selectedSegment, 10)]?.split('.')[0] || '-'}
+                            {racerSplits[parseInt(selectedSegment, 10)]?.includes('.') && (
+                              <Text as="span" fontSize="xs" ml={1}>
+                                .{racerSplits[parseInt(selectedSegment, 10)]?.split('.')[1]}
+                              </Text>
+                            )}
+                          </Text>
+                        </Table.Cell>
+                      )}
+                  {selectedSegment === 'All' && (
+  <>
+    <Table.Cell textAlign="center">
+      <Text>
+        {racer.durationTime === 'N/A' ? '-' : racer.durationTime.split('.')[0]}
+        {racer.durationTime !== 'N/A' && racer.durationTime.includes('.') && (
+          <Text as="span" fontSize="xs" ml={1}>
+            .{racer.durationTime.split('.')[1]}
+          </Text>
+        )}
+      </Text>
+    </Table.Cell>
+    <Table.Cell textAlign="center">
+      <Text>{racer.durationTime === 'N/A' ? '-' : racer.leaguePoints}</Text>
+    </Table.Cell>
+  </>
+)}
+
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table.Root>
+      </Table.ScrollArea>
+    </Box>
+  );
+};
+
+export default memo(Enkeltstart);

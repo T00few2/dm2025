@@ -70,7 +70,7 @@ const RacePage: React.FC = () => {
         return <Heat1 data={raceData} category={category as string}/>;
       case 'point':
         return <Point data={raceData} category={category as string} race={race as string} />;
-      case 'linje':
+      case 'heat3':
         return <Heat3 data={raceData} category={category as string}/>;
       default:
         return (

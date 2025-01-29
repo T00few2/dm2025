@@ -23,7 +23,7 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
   const { racerScores } = data;
 
   if (!racerScores || !Array.isArray(racerScores)) {
-    return <Text>Ingen resultater for enkeltstarten.</Text>;
+    return <Text>Ingen resultater for heat 1.</Text>;
   }
 
   // Sort racers by durationMs, placing those without it at the bottom

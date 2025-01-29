@@ -23,7 +23,7 @@ const Heat3: React.FC<Heat3Props> = ({ data, category }) => {
   const { racerScores } = data;
 
   if (!racerScores || !Array.isArray(racerScores)) {
-    return <Text>Ingen resultater for enkeltstarten.</Text>;
+    return <Text>Ingen resultater for heat 3.</Text>;
   }
 
   // Sort racers by durationMs, placing those without it at the bottom
@@ -152,7 +152,7 @@ const Heat3: React.FC<Heat3Props> = ({ data, category }) => {
           
           >
             <Image 
-              src="/dm_banner.png" // Replace with actual image path
+              src="/dm_banner.PNG" // Replace with actual image path
               alt="Bottom Banner"
               width="50%" // Adjust the size as needed
               maxW="60%" // Ensures it doesn’t get too large
