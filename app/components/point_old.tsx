@@ -19,13 +19,13 @@ import {
   SelectValueText,
 } from '@/components/ui/select';
 
-type EnkeltstartProps = {
+type Heat2Props = {
   data: RaceData;
   category: string;
   race: string;
 };
 
-const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
+const Heat2: React.FC<Heat2Props> = ({ data, category, race }) => {
   const { racerScores = [], segmentScores = [] } = data;
 
   // Default value as an array of strings
@@ -207,4 +207,4 @@ const Enkeltstart: React.FC<EnkeltstartProps> = ({ data, category, race }) => {
   );
 };
 
-export default memo(Enkeltstart);
+export default memo(Heat2);
