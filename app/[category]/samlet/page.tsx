@@ -135,7 +135,7 @@ const SamletPage: React.FC = () => {
             <Table.Root color='white' size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
               <Table.Header textStyle="2xl">
                 <Table.Row bg="rgb(31, 35, 62)" color="white">
-                  <Table.ColumnHeader textAlign="right" width="10%" px="5px">Samlet</Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="right" width="10%" px="5px">Samlet resultat</Table.ColumnHeader>
                   <Table.ColumnHeader textAlign="left" width="25%" px="5px">{formattedCategory}</Table.ColumnHeader>
                   <Table.ColumnHeader textAlign="center" width="15%">Heat 1</Table.ColumnHeader>
                   <Table.ColumnHeader textAlign="center" width="15%">Heat 2</Table.ColumnHeader>
