@@ -19,10 +19,10 @@ const system = createSystem(defaultConfig, {
   },
 })
 
-export function Provider(props: ColorModeProviderProps) {
+export function Provider({ children }: { children: React.ReactNode }) {
   return (
     <ChakraProvider value={system}>
-      <ColorModeProvider {...props} />
+      {children}
     </ChakraProvider>
   )
 }

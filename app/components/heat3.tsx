@@ -99,15 +99,15 @@ const Heat3: React.FC<Heat3Props> = ({ data, category }) => {
             backdropFilter="blur(10px)" // Adds a frosted-glass effect
           >
               <Table.Root color='white' size='lg' minW="70vw" maxW='90vw' minH='40vh' textStyle={'xl'} >
-                <Table.Header textStyle={'2xl'}>
+                <Table.Header color='white' textStyle={'2xl'}>
                   <Table.Row bg='rgb(31, 35, 62)' color="white">
-                    <Table.ColumnHeader textAlign="right" width='10%' px='5px'>Heat 3</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="left" width='25%' px='5px'>
+                    <Table.ColumnHeader color='white' textAlign="right" width='10%' px='5px'>Heat 3</Table.ColumnHeader>
+                    <Table.ColumnHeader color='white' textAlign="left" width='25%' px='5px'>
                       {category.charAt(0).toUpperCase() + category.slice(1)}
                     </Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='20%'>Tid</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='20%'>Forskel</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" width='25%'>Resultat Heat 3</Table.ColumnHeader>
+                    <Table.ColumnHeader color='white' textAlign="center" width='20%'>Tid</Table.ColumnHeader>
+                    <Table.ColumnHeader color='white' textAlign="center" width='20%'>Forskel</Table.ColumnHeader>
+                    <Table.ColumnHeader color='white' textAlign="center" width='25%'>Resultat Heat 3</Table.ColumnHeader>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -117,7 +117,7 @@ const Heat3: React.FC<Heat3Props> = ({ data, category }) => {
                         <Text>{index + 1}</Text>
                       </Table.Cell>
                       <Table.Cell textAlign="left">
-                        <Text>{racer.name}</Text>
+                        <Text whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">{racer.name}</Text>
                       </Table.Cell>
                       <Table.Cell textAlign="center">
                         {racer.durationMs !== undefined ? (
@@ -130,7 +130,7 @@ const Heat3: React.FC<Heat3Props> = ({ data, category }) => {
                       {index === 0 ? (
                           <Text>-</Text> // First row shows "-"
                         ) : (
-                          <Text>+ {racer.timeDifference ?? '-'}</Text> // Other rows show "+ timeDifference"
+                          <Text>{racer.timeDifference ? `+ ${racer.timeDifference}` : '-'}</Text> // Other rows show "+ timeDifference"
                         )}
                         
                       </Table.Cell>

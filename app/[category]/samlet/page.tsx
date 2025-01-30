@@ -135,12 +135,12 @@ const SamletPage: React.FC = () => {
             <Table.Root color='white' size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
               <Table.Header textStyle="2xl">
                 <Table.Row bg="rgb(31, 35, 62)" color="white">
-                  <Table.ColumnHeader textAlign="right" width="10%" px="5px">Samlet resultat</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="left" width="25%" px="5px">{formattedCategory}</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center" width="15%">Heat 1</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center" width="15%">Heat 2</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center" width="15%">Heat 3</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="center" width="20%">Total</Table.ColumnHeader>
+                  <Table.ColumnHeader color='white' textAlign="right" width="10%" px="5px">Samlet</Table.ColumnHeader>
+                  <Table.ColumnHeader color='white' textAlign="left" width="25%" px="5px">{formattedCategory}</Table.ColumnHeader>
+                  <Table.ColumnHeader color='white' textAlign="center" width="15%">Heat 1</Table.ColumnHeader>
+                  <Table.ColumnHeader color='white' textAlign="center" width="15%">Heat 2</Table.ColumnHeader>
+                  <Table.ColumnHeader color='white' textAlign="center" width="15%">Heat 3</Table.ColumnHeader>
+                  <Table.ColumnHeader color='white' textAlign="center" width="20%">Samlet resultat</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -150,7 +150,7 @@ const SamletPage: React.FC = () => {
                       <Text>{index + 1}</Text>
                     </Table.Cell>
                     <Table.Cell textAlign="left">
-                      <Text>{racer.name}</Text>
+                      <Text whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">{racer.name}</Text>
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       <Text>{racer.heatPoints[0] ?? '-'}</Text>
