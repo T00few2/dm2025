@@ -59,7 +59,7 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
                 </Text>
               </Table.Cell>
               <Table.Cell textAlign="center">
-                <Text fontSize="2xl">{racer.pointTotal ?? '-'}</Text>
+                <Text fontSize="2xl">{racer.pointTotal && racer.pointTotal > 0 ? racer.pointTotal : '-'}</Text>
               </Table.Cell>
             </Table.Row>
           ))}
