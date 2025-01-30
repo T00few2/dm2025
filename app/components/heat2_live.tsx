@@ -36,7 +36,7 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
         borderColor="gray.700" 
       >
         <Table.Header color='white' textStyle="2xl">
-          <Table.Row color='white' bg="rgb(31, 35, 62)">
+          <Table.Row color='white' bg="rgba(31, 35, 62, 0.8)">
             <Table.ColumnHeader whiteSpace="nowrap" color='white' textAlign="right" width="15%" px="5px">Heat 2</Table.ColumnHeader>
             <Table.ColumnHeader color='white' textAlign="left" width="55%" px="5px">{formattedCategory}</Table.ColumnHeader>
             <Table.ColumnHeader color='white' textAlign="center" width="25%">Point</Table.ColumnHeader>
@@ -44,7 +44,7 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
         </Table.Header>
         <Table.Body>
           {sortedRacers.map((racer: RacerScore, index: number) => (
-            <Table.Row key={racer.athleteId} bg={index % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
+            <Table.Row key={racer.athleteId} bg={index % 2 === 0 ? 'rgba(0, 5, 35, 0.6)' : 'rgba(31, 35, 62, 0.8)'}>
               <Table.Cell textAlign="right" px="15px">
                 <Text fontSize="2xl">{index + 1}</Text>
               </Table.Cell>
