@@ -33,7 +33,7 @@ const Heat1: React.FC<Heat1Props> = ({ data, category }) => {
       const timeB = b.durationMs ?? Number.MAX_VALUE;
       return timeA - timeB;
     })
-    .slice(0, 16); // Still only show top 16
+    //.slice(0, 16); // Still only show top 16
   
     return (
       <Box 
