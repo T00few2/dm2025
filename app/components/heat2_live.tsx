@@ -2,7 +2,7 @@
 
 import React, { memo } from 'react';
 import { RaceData, RacerScore } from '@/app/types';
-import { Table, Text, Box, Flex } from '@chakra-ui/react';
+import { Table, Text, Box } from '@chakra-ui/react';
 
 type SimpleTableProps = {
   data: RaceData;
