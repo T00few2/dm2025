@@ -25,7 +25,6 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
       display="flex" 
       alignItems="center" 
       justifyContent="center" 
-      bg="black"  // Background for better contrast in OBS
     >
       <Table.Root 
         size="lg" 
@@ -35,11 +34,11 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
         borderWidth="2px" 
         borderColor="gray.700" 
       >
-        <Table.Header textStyle="2xl">
-          <Table.Row bg="rgb(31, 35, 62)">
-            <Table.ColumnHeader textAlign="right" width="10%" px="5px">Heat 2</Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="left" width="40%" px="5px">{formattedCategory}</Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="center" width="20%">Samlet</Table.ColumnHeader>
+        <Table.Header color='white' textStyle="2xl">
+          <Table.Row color='white' bg="rgb(31, 35, 62)">
+            <Table.ColumnHeader whiteSpace="nowrap" color='white' textAlign="right" width="15%" px="5px">Heat 2</Table.ColumnHeader>
+            <Table.ColumnHeader color='white' textAlign="left" width="55%" px="5px">{formattedCategory}</Table.ColumnHeader>
+            <Table.ColumnHeader color='white' textAlign="center" width="25%">Samlet</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -49,7 +48,15 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
                 <Text fontSize="2xl">{index + 1}</Text>
               </Table.Cell>
               <Table.Cell textAlign="left">
-                <Text fontSize="2xl">{racer.name}</Text>
+                <Text fontSize="2xl"  whiteSpace="nowrap" textOverflow="ellipsis">
+                  {(() => {
+                    const nameParts = racer.name.split(" ");
+                    if (nameParts.length > 1) {
+                      return `${nameParts[0].charAt(0).toUpperCase()}. ${nameParts.slice(1).join(" ")}`;
+                    }
+                    return racer.name; // Fallback if there's only one name part
+                  })()}
+                </Text>
               </Table.Cell>
               <Table.Cell textAlign="center">
                 <Text fontSize="2xl">{racer.pointTotal ?? '-'}</Text>
