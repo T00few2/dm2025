@@ -153,16 +153,16 @@ const SamletPage: React.FC = () => {
                       <Text whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">{racer.name}</Text>
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      <Text>{racer.heatPoints[0] ?? '-'}</Text>
+                      <Text>{racer.heatPoints[0] && racer.heatPoints[0] > 0 ? racer.heatPoints[0] : '-'}</Text>
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      <Text>{racer.heatPoints[1] ?? '-'}</Text>
+                      <Text>{racer.heatPoints[1] && racer.heatPoints[1] > 0 ? racer.heatPoints[1] : '-'}</Text>
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      <Text>{racer.heatPoints[2] ?? '-'}</Text>
+                      <Text>{racer.heatPoints[2] && racer.heatPoints[2] > 0 ? racer.heatPoints[2] : '-'}</Text>
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      <Text fontWeight="bold">{racer.total ?? '-'}</Text>
+                      <Text fontWeight="bold">{racer.total && racer.total > 0 ? racer.total : '-'}</Text>
                     </Table.Cell>
                   </Table.Row>
                 ))}

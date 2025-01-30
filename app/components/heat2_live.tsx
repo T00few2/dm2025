@@ -25,6 +25,7 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
       display="flex" 
       alignItems="center" 
       justifyContent="center" 
+      bg="transparent"
     >
       <Table.Root 
         size="lg" 
