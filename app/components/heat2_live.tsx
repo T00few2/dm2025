@@ -39,7 +39,7 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
           <Table.Row color='white' bg="rgb(31, 35, 62)">
             <Table.ColumnHeader whiteSpace="nowrap" color='white' textAlign="right" width="15%" px="5px">Heat 2</Table.ColumnHeader>
             <Table.ColumnHeader color='white' textAlign="left" width="55%" px="5px">{formattedCategory}</Table.ColumnHeader>
-            <Table.ColumnHeader color='white' textAlign="center" width="25%">Samlet</Table.ColumnHeader>
+            <Table.ColumnHeader color='white' textAlign="center" width="25%">Point</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
