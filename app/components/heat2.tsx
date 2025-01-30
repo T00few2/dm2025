@@ -9,7 +9,7 @@ type Heat2Props = {
   category: string;
 };
 
-const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
+const Heat2: React.FC<Heat2Props> = ({ data, category }) => {
   const { racerScores = [], segmentScores = [] } = data;
 
   // Aggregate split points per racer
@@ -27,15 +27,22 @@ const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
     if (segmentIndex === segmentScores.length - 1) {
       racerScores.forEach((racer) => {
         if (acc[racer.athleteId]) {
-          // Add finPoints to the last segment
-          acc[racer.athleteId].splits[segmentIndex] =
-            (acc[racer.athleteId].splits[segmentIndex] ?? 0) + (racer.finPoints ?? 0);
+          // Convert existing value to a number safely before adding finPoints
+          if (racer.finPoints && racer.finPoints > 0) {
+            acc[racer.athleteId].splits[segmentIndex] =
+              (Number(acc[racer.athleteId].splits[segmentIndex]) || 0) + racer.finPoints;
+          } else {
+            // If finPoints is 0, set an empty string to indicate no value
+            acc[racer.athleteId].splits[segmentIndex] = null;
+          }
         }
       });
     }
 
     return acc;
-  }, {} as Record<string, { name: string; splits: number[] }>);
+  }, {} as Record<string, { name: string; splits: (number | string | null)[] }>); // Allow empty values
+
+  console.log(splits)
 
   // Sort racers by total points (descending)
   const sortedRacers = [...racerScores].sort((a, b) => (b.pointTotal ?? 0) - (a.pointTotal ?? 0));
