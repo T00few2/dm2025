@@ -53,7 +53,7 @@ const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
       <Stack>
         {/* HEADER */}
         <Box position="relative" zIndex={2} textAlign="center" py={6}>
-          <Heading color="black" fontWeight="bolder" as="h2" size="7xl">DM e-cykling 2025</Heading>
+          <Heading color="white" fontWeight="bolder" as="h2" size="7xl">DM e-cykling 2025</Heading>
         </Box>
 
         {/* PNG Logo in Top Right Corner */}

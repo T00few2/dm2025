@@ -65,7 +65,7 @@ const Heat3: React.FC<Heat3Props> = ({ data, category }) => {
           textAlign="center" 
           py={6} 
         >
-          <Heading color={'black'} fontWeight={'bolder'} as="h2" size="7xl">DM e-cykling 2025</Heading>
+          <Heading color={'white'} fontWeight={'bolder'} as="h2" size="7xl">DM e-cykling 2025</Heading>
           {/*<Heading color={'black'} fontWeight={'bolder'} as="h2" size="5xl">
             {category.charAt(0).toUpperCase() + category.slice(1)} Heat 1
           </Heading> */}

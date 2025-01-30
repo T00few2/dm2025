@@ -42,8 +42,8 @@ export default function Home() {
       <Stack>
         {/* HEADER */}
         <Box position="relative" zIndex={2} textAlign="center" py={6}>
-          <Heading color="black" fontWeight="bolder" as="h2" size="7xl">DM e-cykling 2025</Heading>
-          <Heading color="black" fontWeight="bolder" as="h2" size="4xl">Løbsresultater</Heading>
+          <Heading color="white" fontWeight="bolder" as="h2" size="7xl">DM e-cykling 2025</Heading>
+          <Heading color="white" fontWeight="bolder" as="h2" size="4xl">Løbsresultater</Heading>
         </Box>
 
         {/* PNG Logo in Top Right Corner */}
@@ -63,37 +63,43 @@ export default function Home() {
             <Table.Root color='white' size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
               <Table.Header color='white' textStyle="2xl">
                 <Table.Row color='white' bg="rgb(31, 35, 62)">
-                  <Table.ColumnHeader color='white' textAlign="left" px="25px" width = '40%'>Kategori</Table.ColumnHeader>
+                  <Table.ColumnHeader color='white' textAlign="left" px="25px" width="25%">Kategori</Table.ColumnHeader>
                   {Object.keys(typedEventMap[categories[0]]).map((race) => (
-                    <Table.ColumnHeader color='white' key={race} textAlign="center" width = '15%'>{race.replace(/heat(\d+)/i, 'Heat $1')}</Table.ColumnHeader>
+                    <Table.ColumnHeader color='white' key={race} textAlign="center" width="15%">
+                      {race.replace(/heat(\d+)/i, 'Heat $1')}
+                    </Table.ColumnHeader>
                   ))}
+                  <Table.ColumnHeader color='white' textAlign="center" width="15%">Samlet resultat</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
 
               <Table.Body>
-  {categories.map((category, catIndex) => {
-    // Capitalize first letter of category
-    const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+                {categories.map((category, catIndex) => {
+                  // Capitalize first letter of category
+                  const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
 
-    return (
-      <Table.Row key={catIndex} bg={catIndex % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
-        <Table.Cell textAlign="left" px="25px">
-          <Text fontWeight="bold">{formattedCategory}</Text>
-        </Table.Cell>
-        {Object.keys(typedEventMap[category]).map((race, raceIndex) => {
-          return (
-            <Table.Cell key={raceIndex} textAlign="center">
-              <Link href={`/${category.toLowerCase()}/${race.toLowerCase()}`} passHref>
-                <Text color="white" _hover={{ textDecoration: 'underline' }}>Link</Text>
-              </Link>
-            </Table.Cell>
-          );
-        })}
-      </Table.Row>
-    );
-  })}
-</Table.Body>
-
+                  return (
+                    <Table.Row key={catIndex} bg={catIndex % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
+                      <Table.Cell textAlign="left" px="25px">
+                        <Text fontWeight="bold">{formattedCategory}</Text>
+                      </Table.Cell>
+                      {Object.keys(typedEventMap[category]).map((race, raceIndex) => (
+                        <Table.Cell key={raceIndex} textAlign="center">
+                          <Link href={`/${category.toLowerCase()}/${race.toLowerCase()}`} passHref>
+                            <Text color="white" _hover={{ textDecoration: 'underline' }}>Link</Text>
+                          </Link>
+                        </Table.Cell>
+                      ))}
+                      {/* ✅ Added "Samlet" Link */}
+                      <Table.Cell textAlign="center">
+                        <Link href={`/${category.toLowerCase()}/samlet`} passHref>
+                          <Text color="white" _hover={{ textDecoration: 'underline' }}>Samlet</Text>
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
             </Table.Root>
           </Box>
         </Flex>

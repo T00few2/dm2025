@@ -42,7 +42,6 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
             <Table.ColumnHeader textAlign="center" width="20%">Samlet</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
-
         <Table.Body>
           {sortedRacers.map((racer: RacerScore, index: number) => (
             <Table.Row key={racer.athleteId} bg={index % 2 === 0 ? 'rgb(0, 5, 35)' : 'rgb(31, 35, 62)'}>
