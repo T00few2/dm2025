@@ -22,6 +22,18 @@ const Heat2: React.FC<Heat2Props> = ({ data, category}) => {
         acc[fal.athleteId].splits[segmentIndex] = fal.points;
       });
     }
+
+    // If it's the last segment, award finPoints from racerScores
+    if (segmentIndex === segmentScores.length - 1) {
+      racerScores.forEach((racer) => {
+        if (acc[racer.athleteId]) {
+          // Add finPoints to the last segment
+          acc[racer.athleteId].splits[segmentIndex] =
+            (acc[racer.athleteId].splits[segmentIndex] ?? 0) + (racer.finPoints ?? 0);
+        }
+      });
+    }
+
     return acc;
   }, {} as Record<string, { name: string; splits: number[] }>);
 
