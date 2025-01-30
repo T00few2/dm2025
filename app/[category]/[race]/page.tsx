@@ -11,6 +11,8 @@ import { RaceData, EventMap } from '@/app/types';
 import Heat1 from '@/app/components/heat1';
 import Heat2 from '@/app/components/heat2';
 import Heat3 from '@/app/components/heat3';
+import Heat2Live from '@/app/components/heat2_live';
+
 
 const eventMap = rawEventMap as EventMap;
 
@@ -25,8 +27,10 @@ const RacePage: React.FC = () => {
   const categoryKey = categoryStr.toLowerCase();
   const raceKey = raceStr.toLowerCase();
 
+  const formattedRaceKey = raceKey === 'heat2_live' ? 'heat2' : raceKey;
+
   // Get eventID from JSON
-  const eventID = eventMap[categoryKey]?.[raceKey];
+  const eventID = eventMap[categoryKey]?.[formattedRaceKey];
 
   const [data, setData] = useState<RaceData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,6 +76,8 @@ const RacePage: React.FC = () => {
         return <Heat2 data={raceData} category={category as string}/>;
       case 'heat3':
         return <Heat3 data={raceData} category={category as string}/>;
+      case 'heat2_live':
+          return <Heat2Live data={raceData} category={category as string}/>;
       default:
         return (
           <div>
