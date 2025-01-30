@@ -16,7 +16,24 @@ const Heat2Live: React.FC<SimpleTableProps> = ({ data, category }) => {
   const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
 
   // Sort racers by total points (descending)
-  const sortedRacers = [...racerScores].sort((a, b) => (b.pointTotal ?? 0) - (a.pointTotal ?? 0));
+  //const sortedRacers = [...racerScores].sort((a, b) => (b.pointTotal ?? 0) - (a.pointTotal ?? 0));
+
+  // Sort racers by total points (descending), using finPoints as a tiebreaker
+  const sortedRacers = [...racerScores].sort((a, b) => {
+    const pointTotalA = a.pointTotal ?? 0;
+    const pointTotalB = b.pointTotal ?? 0;
+    
+    // First sort by pointTotal
+    if (pointTotalB !== pointTotalA) {
+      return pointTotalB - pointTotalA;
+    }
+
+    // If pointTotal is the same, sort by finPoints
+    const finPointsA = a.finPoints ?? 0;
+    const finPointsB = b.finPoints ?? 0;
+    return finPointsB - finPointsA; // Descending order
+  });
+
 
   return (
     <Box 
