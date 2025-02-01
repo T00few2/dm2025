@@ -88,7 +88,13 @@ const SamletPage: React.FC = () => {
   });
 
   // Sort by total league points (descending)
-  const sortedRacers = Object.values(totalPoints).sort((a, b) => b.total - a.total);
+  //const sortedRacers = Object.values(totalPoints).sort((a, b) => b.total - a.total);
+  const sortedRacers = Object.values(totalPoints).sort((a, b) => {
+    if (b.total !== a.total) {
+      return b.total - a.total; // Sort by total points (descending)
+    }
+    return b.heatPoints[2] - a.heatPoints[2]; // If tie, sort by Heat 3 points (descending)
+  });
 
   return (
     <Box 

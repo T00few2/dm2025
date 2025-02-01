@@ -92,14 +92,14 @@ const Heat2: React.FC<Heat2Props> = ({ data, category }) => {
             bg="rgba(255, 255, 255, 0.1)" 
             backdropFilter="blur(10px)"
           >
-            <Table.Root color='white' size="lg" minW="80vw" maxW="90vw" minH="40vh" textStyle="xl">
+            <Table.Root color='white' size="lg" minW="80vw" maxW="95vw" minH="40vh" textStyle="xl">
               <Table.Header color='white' textStyle="2xl">
                 <Table.Row bg="rgb(31, 35, 62)" color="white">
                   <Table.ColumnHeader color='white' textAlign="right" width="10%" px="5px">Heat 2</Table.ColumnHeader>
                   <Table.ColumnHeader color='white' textAlign="left" width="15%" px="5px">{category.charAt(0).toUpperCase() + category.slice(1)}</Table.ColumnHeader>
-                  {segmentScores.map((segment, index) => (<Table.ColumnHeader color='white' key={index} textAlign="center" width="10%">Spurt {segment.repeat}</Table.ColumnHeader>))}
+                  {segmentScores.map((segment, index) => (<Table.ColumnHeader color='white' key={index} textAlign="center" width="8%">Spurt {segment.repeat}</Table.ColumnHeader>))}
                   <Table.ColumnHeader color='white' textAlign="center" width="10%">Samlet</Table.ColumnHeader>
-                  <Table.ColumnHeader color='white' textAlign="center" width="15%">Resultat Heat 2</Table.ColumnHeader> {/* New column for leaguePoints */}
+                  <Table.ColumnHeader whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis" color='white' textAlign="center" width="15%">Resultat Heat 2</Table.ColumnHeader> {/* New column for leaguePoints */}
                 </Table.Row>
               </Table.Header>
               <Table.Body>
