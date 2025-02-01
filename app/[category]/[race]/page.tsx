@@ -12,6 +12,7 @@ import Heat1 from '@/app/components/heat1';
 import Heat2 from '@/app/components/heat2';
 import Heat3 from '@/app/components/heat3';
 import Heat2Live from '@/app/components/heat2_live';
+import Heat2Fallback from '@/app/components/heat2fallback';
 
 
 const eventMap = rawEventMap as EventMap;
@@ -65,19 +66,23 @@ const RacePage: React.FC = () => {
 
     return () => off(dbRef, 'value', unsubscribe);
   }, [eventID]);
- 
 
-  // Function to render race-specific component
   const renderRaceComponent = (raceData: RaceData) => {
+    if (raceKey === 'heat2') {
+      const hasPosition = raceData.racerScores?.some((racer) => 'position' in racer);
+      if (hasPosition) {
+        return <Heat2Fallback data={raceData} category={category as string} />;
+      }
+      return <Heat2 data={raceData} category={category as string} />;
+    }
+
     switch (raceKey) {
       case 'heat1':
-        return <Heat1 data={raceData} category={category as string}/>;
-      case 'heat2':
-        return <Heat2 data={raceData} category={category as string}/>;
+        return <Heat1 data={raceData} category={category as string} />;
       case 'heat3':
-        return <Heat3 data={raceData} category={category as string}/>;
+        return <Heat3 data={raceData} category={category as string} />;
       case 'heat2_live':
-          return <Heat2Live data={raceData} category={category as string}/>;
+        return <Heat2Live data={raceData} category={category as string} />;
       default:
         return (
           <div>
