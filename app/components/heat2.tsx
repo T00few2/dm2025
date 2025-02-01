@@ -22,7 +22,7 @@ const Heat2: React.FC<Heat2Props> = ({ data, category }) => {
         acc[fal.athleteId].splits[segmentIndex] = fal.points;
       });
     }
-
+    {/* 
     // If it's the last segment, award finPoints from racerScores
     if (segmentIndex === segmentScores.length - 1) {
       racerScores.forEach((racer) => {
@@ -38,6 +38,7 @@ const Heat2: React.FC<Heat2Props> = ({ data, category }) => {
         }
       });
     }
+    */}
 
     return acc;
   }, {} as Record<string, { name: string; splits: (number | string | null)[] }>); // Allow empty values
