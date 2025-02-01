@@ -44,7 +44,7 @@ const Heat2: React.FC<Heat2Props> = ({ data, category }) => {
   }, {} as Record<string, { name: string; splits: (number | string | null)[] }>); // Allow empty values
 
   // Sort racers by total points (descending)
-  const sortedRacers = [...racerScores].sort((a, b) => (b.pointTotal ?? 0) - (a.pointTotal ?? 0));
+  const sortedRacers = [...racerScores].sort((a, b) => (b.leaguePoints ?? 0) - (a.leaguePoints ?? 0));
 
   return (
     <Box 
