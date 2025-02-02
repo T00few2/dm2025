@@ -67,7 +67,7 @@ const SamletPage: React.FC = () => {
   }
 
   // Aggregate points per rider
-  const totalPoints: Record<string, { name: string; total: number; heatPoints: number[] }> = {};
+  const totalPoints: Record<string, { name: string; total: number | 'DNF'; heatPoints: number[]; racesPresent: number }> = {};
 
   Object.entries(data).forEach(([heat, heatData]) => {
     if (!heatData?.racerScores) return;
@@ -76,25 +76,41 @@ const SamletPage: React.FC = () => {
       if (!totalPoints[racer.athleteId]) {
         totalPoints[racer.athleteId] = {
           name: racer.name,
-          total: 0,
+          total: 0, // Initially set to 0, will be updated later
           heatPoints: [0, 0, 0], // Heat 1, Heat 2, Heat 3
+          racesPresent: 0, // Track how many heats they were present in
         };
       }
 
       const heatIndex = Object.keys(heatIDs).indexOf(heat);
       totalPoints[racer.athleteId].heatPoints[heatIndex] = racer.leaguePoints ?? 0;
-      totalPoints[racer.athleteId].total += racer.leaguePoints ?? 0;
+      totalPoints[racer.athleteId].racesPresent += 1; // Mark the rider as present in this heat
     });
   });
 
-  // Sort by total league points (descending)
-  //const sortedRacers = Object.values(totalPoints).sort((a, b) => b.total - a.total);
-  const sortedRacers = Object.values(totalPoints).sort((a, b) => {
-    if (b.total !== a.total) {
-      return b.total - a.total; // Sort by total points (descending)
+  // Assign DNF only if a rider is missing from at least one heat
+  Object.values(totalPoints).forEach((racer) => {
+    if (racer.racesPresent < 3) {
+      racer.total = 'DNF';
+    } else {
+      racer.total = racer.heatPoints.reduce((acc, points) => acc + points, 0);
     }
-    return b.heatPoints[2] - a.heatPoints[2]; // If tie, sort by Heat 3 points (descending)
   });
+
+  // Sort by total league points (descending), but place DNF riders at the bottom
+  const sortedRacers = Object.values(totalPoints).sort((a, b) => {
+    if (a.total === 'DNF' && b.total !== 'DNF') return 1;
+    if (b.total === 'DNF' && a.total !== 'DNF') return -1;
+    if (typeof b.total === 'number' && typeof a.total === 'number') {
+      if (b.total !== a.total) {
+        return b.total - a.total; // Sort by total points (descending)
+      }
+      return b.heatPoints[2] - a.heatPoints[2]; // If tie, sort by Heat 3 points (descending)
+    }
+    return 0;
+  });
+
+
 
   return (
     <Box 
@@ -168,8 +184,11 @@ const SamletPage: React.FC = () => {
                       <Text>{racer.heatPoints[2] && racer.heatPoints[2] > 0 ? racer.heatPoints[2] : '-'}</Text>
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      <Text fontWeight="bold">{racer.total && racer.total > 0 ? racer.total : '-'}</Text>
-                    </Table.Cell>
+                    <Text fontWeight="bold">
+                      {typeof racer.total === 'number' && racer.total > 0 ? racer.total : racer.total === 'DNF' ? 'DNF' : '-'}
+                    </Text>
+                  </Table.Cell>
+
                   </Table.Row>
                 ))}
               </Table.Body>
